@@ -1,0 +1,18 @@
+{
+  "name": "room-split",
+  "version": "1.0.0",
+  "description": "Smart Room Expense Splitter — split bills by actual consumption",
+  "private": true,
+  "scripts": {
+    "build":        "cd client && npm run build",
+    "start":        "node server/server.js",
+    "dev:server":   "cd server && npx nodemon server.js",
+    "dev:client":   "cd client && npm run dev",
+    "dev":          "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "deploy":       "npm run build && npm start",
+    "seed":         "cd server && node seed.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

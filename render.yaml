@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: room-split
+    runtime: node
+    region: singapore   # closest to India; change to "ohio" for US
+    plan: free
+
+    # Install all deps + build React client
+    buildCommand: >
+      npm install &&
+      cd client && npm install && npm run build &&
+      cd ../server && npm install
+
+    # Start the Express server (serves built React + API)
+    startCommand: node server/server.js
+
+    # Health check endpoint
+    healthCheckPath: /api/health
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000          # Render's default port for free tier
+      - key: JWT_SECRET
+        generateValue: true   # Render auto-generates a secure random value
