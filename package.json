@@ -4,7 +4,8 @@
   "description": "Smart Room Expense Splitter — split bills by actual consumption",
   "private": true,
   "scripts": {
-    "build":        "cd client && npm run build",
+    "postinstall":  "npm install --prefix client && npm install --prefix server",
+    "build":        "npm run --prefix client build",
     "start":        "node server/server.js",
     "dev:server":   "cd server && npx nodemon server.js",
     "dev:client":   "cd client && npm run dev",
