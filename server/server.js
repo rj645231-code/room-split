@@ -5,6 +5,10 @@ const helmet  = require('helmet');
 const morgan  = require('morgan');
 const path    = require('path');
 
+// Catch startup crashes clearly in Render logs
+process.on('uncaughtException',  (err) => { console.error('❌ CRASH:', err); process.exit(1); });
+process.on('unhandledRejection', (err) => { console.error('❌ UNHANDLED:', err); process.exit(1); });
+
 // Initialize SQLite (creates DB file automatically)
 require('./config/db');
 
