@@ -211,7 +211,7 @@ body {
 /* ── Stat Card ── */
 .stat-card {
   position: relative; overflow: hidden;
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   border-radius: var(--radius-xl);
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -220,6 +220,9 @@ body {
   position: absolute; inset: 0;
   opacity: 0.06;
   border-radius: inherit;
+}
+@media (max-width: 640px) {
+  .stat-card { padding: 1rem 1.1rem !important; }
 }
 
 /* ── Timeline ── */
@@ -413,7 +416,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
     padding: 1rem 0.75rem;
     padding-bottom: 5.5rem; /* space for FAB */
   }
-  .card-glass { padding: 1rem !important; }
+  .card-glass:not(.stat-card) { padding: 1rem !important; }
   .modal-content {
     max-height: 96vh;
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;

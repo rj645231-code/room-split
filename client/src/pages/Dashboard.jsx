@@ -101,7 +101,7 @@ export default function Dashboard() {
       />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-4 lg:mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mb-6 lg:mb-8">
         <StatCard icon={Wallet}       label="Total Group Spend"  value={totalSpent}         color="purple" delay={0}    />
         <StatCard icon={TrendingDown} label="You Owe"            value={iOwe}               color="red"    delay={0.07} />
         <StatCard icon={TrendingUp}   label="You Get Back"       value={iGetBack}           color="green"  delay={0.14} />
