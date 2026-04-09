@@ -1,28 +1,28 @@
 const db = require('../config/db');
 const { newId, parseUser } = require('../utils/helpers');
 
-exports.getUsers = (req, res) => {
+exports.getUsers = async (req, res) => {
   try {
-    const rows = db.prepare('SELECT * FROM users ORDER BY created_at DESC').all();
+    const rows = await db.prepare('SELECT * FROM users ORDER BY created_at DESC').all();
     res.json({ success: true, data: rows.map(parseUser) });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 };
 
-exports.getUser = (req, res) => {
+exports.getUser = async (req, res) => {
   try {
-    const row = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+    const row = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
     if (!row) return res.status(404).json({ success: false, message: 'User not found' });
     res.json({ success: true, data: parseUser(row) });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 };
 
-exports.createUser = (req, res) => {
+exports.createUser = async (req, res) => {
   try {
     const { name, email, color = '#6366f1', avatar = '', preferences = {} } = req.body;
     if (!name || !email) return res.status(400).json({ success: false, message: 'Name and email required' });
 
     const id = newId();
-    db.prepare(`
+    await db.prepare(`
       INSERT INTO users (id, name, email, color, avatar, dietary, dislikes, allergies)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
@@ -32,7 +32,7 @@ exports.createUser = (req, res) => {
       JSON.stringify(preferences.allergies || []),
     );
 
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+    const user = await db.prepare('SELECT * FROM users WHERE id = ?').get(id);
     res.status(201).json({ success: true, data: parseUser(user) });
   } catch (e) {
     if (e.message.includes('UNIQUE')) return res.status(400).json({ success: false, message: 'Email already exists' });
@@ -40,13 +40,13 @@ exports.createUser = (req, res) => {
   }
 };
 
-exports.updateUser = (req, res) => {
+exports.updateUser = async (req, res) => {
   try {
     const { name, email, color, avatar, preferences = {} } = req.body;
-    const existing = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+    const existing = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
     if (!existing) return res.status(404).json({ success: false, message: 'User not found' });
 
-    db.prepare(`
+    await db.prepare(`
       UPDATE users SET
         name      = ?, email     = ?, color    = ?,
         avatar    = ?, dietary   = ?, dislikes = ?, allergies = ?
@@ -62,14 +62,14 @@ exports.updateUser = (req, res) => {
       req.params.id,
     );
 
-    const updated = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+    const updated = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
     res.json({ success: true, data: parseUser(updated) });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 };
 
-exports.deleteUser = (req, res) => {
+exports.deleteUser = async (req, res) => {
   try {
-    db.prepare('DELETE FROM users WHERE id = ?').run(req.params.id);
+    await db.prepare('DELETE FROM users WHERE id = ?').run(req.params.id);
     res.json({ success: true, message: 'User deleted' });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 };

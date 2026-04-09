@@ -4,8 +4,8 @@ const { minimizeSettlements } = require('../utils/splitAlgorithm');
 /**
  * Compute balances and settlements for a group using SQLite data
  */
-const computeGroupBalances = (groupId, members) => {
-  const expenses = db.prepare(`
+const computeGroupBalances = async (groupId, members) => {
+  const expenses = await db.prepare(`
     SELECT e.*, u.name as payer_name, u.color as payer_color
     FROM expenses e
     JOIN users u ON u.id = e.paid_by
@@ -17,19 +17,17 @@ const computeGroupBalances = (groupId, members) => {
     balanceMap[m._id] = { userId: m._id, name: m.name, color: m.color, balance: 0 };
   });
 
-  expenses.forEach(exp => {
-    // Credit the payer
+  for (const exp of expenses) {
     if (balanceMap[exp.paid_by]) {
       balanceMap[exp.paid_by].balance += exp.total_amount;
     }
-    // Debit each split
-    const splits = db.prepare('SELECT * FROM splits WHERE expense_id = ? AND is_paid = 0').all(exp.id);
-    splits.forEach(s => {
+    const splits = await db.prepare('SELECT * FROM splits WHERE expense_id = ? AND is_paid = 0').all(exp.id);
+    for (const s of splits) {
       if (balanceMap[s.user_id]) {
         balanceMap[s.user_id].balance -= s.amount;
       }
-    });
-  });
+    }
+  }
 
   const balances = Object.values(balanceMap).map(b => ({
     ...b,
@@ -43,8 +41,8 @@ const computeGroupBalances = (groupId, members) => {
 /**
  * Generate smart suggestions from expense history
  */
-const generateSmartSuggestions = (groupId, members) => {
-  const items = db.prepare(`
+const generateSmartSuggestions = async (groupId, members) => {
+  const items = await db.prepare(`
     SELECT ei.id, ei.name, ic.user_id
     FROM expense_items ei
     JOIN expenses e ON e.id = ei.expense_id

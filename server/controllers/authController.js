@@ -7,7 +7,7 @@ const { parseUser } = require('../utils/helpers');
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey_roomsplitter_2024';
 const JWT_EXPIRES_IN = '30d';
 
-exports.register = (req, res) => {
+exports.register = async (req, res) => {
   const { name, email, password, username, avatar, color, dietary, dislikes, allergies } = req.body;
   if (!name || !email || !password) {
     return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
@@ -18,7 +18,7 @@ exports.register = (req, res) => {
 
   try {
     // Check email uniqueness
-    const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+    const existing = await db.prepare('SELECT id FROM users WHERE email = ?').get(email);
     if (existing) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
@@ -26,7 +26,7 @@ exports.register = (req, res) => {
     // Check username uniqueness — generate a unique one if taken
     let finalUsername = rawUsername;
     let suffix = 1;
-    while (db.prepare('SELECT id FROM users WHERE username = ?').get(finalUsername)) {
+    while (await db.prepare('SELECT id FROM users WHERE username = ?').get(finalUsername)) {
       finalUsername = `${rawUsername}${suffix++}`;
     }
 
@@ -34,7 +34,7 @@ exports.register = (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, salt);
     const newId = uuidv4();
 
-    db.prepare(`
+    await db.prepare(`
       INSERT INTO users (id, username, name, email, password, color, avatar, dietary, dislikes, allergies)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
@@ -45,7 +45,7 @@ exports.register = (req, res) => {
       JSON.stringify(allergies || [])
     );
 
-    const userRow = db.prepare('SELECT * FROM users WHERE id = ?').get(newId);
+    const userRow = await db.prepare('SELECT * FROM users WHERE id = ?').get(newId);
     const user = parseUser(userRow);
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
@@ -56,7 +56,7 @@ exports.register = (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -64,7 +64,7 @@ exports.login = (req, res) => {
   }
 
   try {
-    const userRow = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    const userRow = await db.prepare('SELECT * FROM users WHERE email = ?').get(email);
     if (!userRow) {
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
     }
@@ -83,9 +83,9 @@ exports.login = (req, res) => {
   }
 };
 
-exports.getMe = (req, res) => {
+exports.getMe = async (req, res) => {
   try {
-    const userRow = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+    const userRow = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
     if (!userRow) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
@@ -96,19 +96,19 @@ exports.getMe = (req, res) => {
   }
 };
 
-exports.updateProfile = (req, res) => {
+exports.updateProfile = async (req, res) => {
   const { name, username, color, avatar, dietary, dislikes, allergies } = req.body;
   try {
-    const userRow = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+    const userRow = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
     if (!userRow) return res.status(404).json({ success: false, message: 'User not found' });
 
     // Check username uniqueness if changing
     if (username && username !== userRow.username) {
-      const taken = db.prepare('SELECT id FROM users WHERE username = ? AND id != ?').get(username, req.user.id);
+      const taken = await db.prepare('SELECT id FROM users WHERE username = ? AND id != ?').get(username, req.user.id);
       if (taken) return res.status(400).json({ success: false, message: 'Username already taken' });
     }
 
-    db.prepare(`
+    await db.prepare(`
       UPDATE users
       SET name = ?, username = ?, color = ?, avatar = ?, dietary = ?, dislikes = ?, allergies = ?
       WHERE id = ?
@@ -123,7 +123,7 @@ exports.updateProfile = (req, res) => {
       req.user.id
     );
 
-    const updatedRow = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+    const updatedRow = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
     res.json({ success: true, data: parseUser(updatedRow) });
   } catch (error) {
     console.error('Update profile error:', error);
