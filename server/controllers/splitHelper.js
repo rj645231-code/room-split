@@ -18,10 +18,16 @@ const computeGroupBalances = async (groupId, members) => {
   });
 
   for (const exp of expenses) {
-    if (balanceMap[exp.paid_by]) {
-      balanceMap[exp.paid_by].balance += exp.total_amount;
-    }
+    // Fetch unpaid splits first — payer is credited only with what others owe them,
+    // NOT the full total_amount. This implicitly deducts the payer's own share,
+    // which is never stored as a split record by computeSplits().
     const splits = await db.prepare('SELECT * FROM splits WHERE expense_id = ? AND is_paid = 0').all(exp.id);
+
+    const totalOwedByOthers = splits.reduce((sum, s) => sum + s.amount, 0);
+    if (balanceMap[exp.paid_by]) {
+      balanceMap[exp.paid_by].balance += totalOwedByOthers;
+    }
+
     for (const s of splits) {
       if (balanceMap[s.user_id]) {
         balanceMap[s.user_id].balance -= s.amount;
