@@ -113,3 +113,88 @@ exports.cancelSettlement = async (req, res) => {
     res.json({ success: true, message: 'Settlement cancelled' });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 };
+
+const Razorpay = require('razorpay');
+let razorpayClient;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  razorpayClient = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+}
+
+exports.generatePaymentLink = async (req, res) => {
+  try {
+    if (!razorpayClient) return res.status(500).json({ success: false, message: 'Razorpay is not configured on the server. Please add API Keys.' });
+    const { group, from, to, amount, note = 'Debt Settlement' } = req.body;
+    if (!group || !from || !to || !amount) {
+      return res.status(400).json({ success: false, message: 'group, from, to, amount required' });
+    }
+
+    if (from !== req.user.id) {
+       return res.status(403).json({ success: false, message: 'You can only record payments for yourself' });
+    }
+
+    const fromUser = await db.prepare('SELECT * FROM users WHERE id = ?').get(from);
+    if (!fromUser) return res.status(404).json({ success: false, message: 'User not found' });
+    
+    const amountInPaise = Math.round(parseFloat(amount) * 100);
+
+    const paymentLinkRequest = {
+      amount: amountInPaise,
+      currency: "INR",
+      accept_partial: false,
+      description: `Room Split Settlement - ${note}`,
+      customer: {
+        name: fromUser.name,
+        email: fromUser.email,
+        contact: "+919000000000" // Adding a dummy contact since Razorpay sometimes requires it depending on config
+      },
+      notify: { sms: false, email: false },
+      reminder_enable: false,
+      notes: { group_id: group, from_user: from, to_user: to }
+    };
+
+    const paymentLink = await razorpayClient.paymentLink.create(paymentLinkRequest);
+
+    const id = newId();
+    await db.prepare(`
+      INSERT INTO settlements (id, group_id, from_user, to_user, amount, note, status, razorpay_link_id, razorpay_url)
+      VALUES (?, ?, ?, ?, ?, ?, 'pending_payment', ?, ?)
+    `).run(id, group, from, to, amount, note, paymentLink.id, paymentLink.short_url);
+
+    res.json({ success: true, url: paymentLink.short_url });
+  } catch (error) {
+    console.error('Razorpay Error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.verifyPaymentLink = async (req, res) => {
+  try {
+    if (!razorpayClient) return res.status(500).json({ success: false, message: 'Razorpay is not configured' });
+    const settlement = await db.prepare('SELECT * FROM settlements WHERE id = ?').get(req.params.id);
+    if (!settlement) return res.status(404).json({ success: false, message: 'Settlement not found' });
+    
+    if (!settlement.razorpay_link_id) return res.status(400).json({ success: false, message: 'Not a Razorpay settlement' });
+
+    const razorpayData = await razorpayClient.paymentLink.fetch(settlement.razorpay_link_id);
+    
+    if (razorpayData.status === 'paid') {
+        const currentDate = new Date().toISOString();
+        await db.prepare(`UPDATE settlements SET status = 'completed', completed_at = ? WHERE id = ?`).run(currentDate, settlement.id);
+        
+        const expenses = await db.prepare('SELECT id FROM expenses WHERE group_id = ? AND is_settled = 0').all(settlement.group_id);
+        const markPaid = await db.prepare('UPDATE splits SET is_paid = 1 WHERE expense_id = ? AND user_id = ?');
+        for (const e of expenses) {
+          await markPaid.run(e.id, settlement.from_user);
+        }
+        
+        return res.json({ success: true, message: 'Payment confirmed & marked as completed', status: 'completed' });
+    }
+    
+    res.json({ success: true, message: 'Payment pending', status: razorpayData.status });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

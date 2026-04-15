@@ -10,5 +10,7 @@ router.get('/suggest/:groupId',  ctrl.getSuggestedSettlements);
 router.post('/',                 ctrl.createSettlement);
 router.put('/:id/confirm',       ctrl.confirmSettlement);
 router.put('/:id/cancel',        ctrl.cancelSettlement);
+router.post('/pay-link',         ctrl.generatePaymentLink);
+router.get('/verify-link/:id',   ctrl.verifyPaymentLink);
 
 module.exports = router;

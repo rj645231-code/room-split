@@ -68,5 +68,7 @@ export const getSuggestedSettlements = (groupId) =>
 export const createSettlement      = (data)  => api.post('/settlements', data);
 export const confirmSettlement     = (id)    => api.put(`/settlements/${id}/confirm`);
 export const cancelSettlement      = (id)    => api.put(`/settlements/${id}/cancel`);
+export const createPaymentLink     = (data)  => api.post('/settlements/pay-link', data);
+export const verifyPaymentLink     = (id)    => api.get(`/settlements/verify-link/${id}`);
 
 export default api;

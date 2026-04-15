@@ -141,6 +141,8 @@ async function initDB() {
     await safeAlter(`ALTER TABLE group_members ADD COLUMN role TEXT DEFAULT 'member'`);
     await safeAlter(`ALTER TABLE group_members ADD COLUMN joined_at TEXT DEFAULT (datetime('now'))`);
     await safeAlter(`ALTER TABLE expenses ADD COLUMN created_by TEXT`);
+    await safeAlter(`ALTER TABLE settlements ADD COLUMN razorpay_link_id TEXT`);
+    await safeAlter(`ALTER TABLE settlements ADD COLUMN razorpay_url TEXT`);
 
     try {
       await client.execute(`

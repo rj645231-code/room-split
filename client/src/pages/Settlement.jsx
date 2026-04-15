@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ArrowRight, Sparkles, RefreshCw, Info, Clock, XCircle, AlertCircle } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles, RefreshCw, Info, Clock, XCircle, AlertCircle, Zap } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import {
   getSuggestedSettlements, createSettlement, getSettlements,
-  confirmSettlement, cancelSettlement,
+  confirmSettlement, cancelSettlement, createPaymentLink, verifyPaymentLink
 } from '../services/api';
 import { MOCK_DATA } from '../services/mockData';
 import TopBar from '../components/TopBar';
@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 
 const STATUS_CONFIG = {
   pending_confirmation: { label: '⏳ Awaiting Confirmation', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.25)' },
+  pending_payment:      { label: '🔗 Razorpay Link Active',  color: '#818cf8', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.25)' },
   completed:            { label: '✅ Settled',              color: '#34d399', bg: 'rgba(16,185,129,0.08)',  border: 'rgba(16,185,129,0.2)' },
   cancelled:            { label: '❌ Cancelled',            color: '#f87171', bg: 'rgba(239,68,68,0.07)',   border: 'rgba(239,68,68,0.2)' },
 };
@@ -93,6 +94,43 @@ export default function Settlement() {
       toast.success('Settlement cancelled');
       fetchData();
     } catch (err) { toast.error(err.response?.data?.message || 'Failed to cancel'); }
+    finally { setActioning(null); }
+  };
+
+  const handleRazorpay = async (s) => {
+    if (isOfflineMode) return toast.error('Start the backend to use Razorpay');
+    if (!s.fromUser?._id || !s.toUser?._id) return;
+    if (s.fromUser._id !== currentUser?._id) return toast.error('You can only record your own payments');
+    setActioning(`rzp-${s.from}`);
+    try {
+      const res = await createPaymentLink({
+        group: activeGroup._id,
+        from: s.fromUser._id, 
+        to: s.toUser._id,
+        amount: s.amount, 
+        note: 'Razorpay UPI link generated',
+      });
+      if (res.data.url) {
+        window.open(res.data.url, '_blank');
+        toast.success('Razorpay link generated! Check history to sync.');
+        setTab('history');
+        fetchData();
+      }
+    } catch (err) { toast.error(err.response?.data?.message || 'Failed to generate link'); }
+    finally { setActioning(null); }
+  };
+
+  const handleVerifyRazorpay = async (id) => {
+    setActioning(`verify-${id}`);
+    try {
+      const res = await verifyPaymentLink(id);
+      if (res.data.status === 'completed') {
+        toast.success('Payment verified & completed successfully!');
+      } else {
+        toast.info(`Payment is still ${res.data.status}`);
+      }
+      fetchData();
+    } catch (err) { toast.error(err.response?.data?.message || 'Failed to verify'); }
     finally { setActioning(null); }
   };
 
@@ -273,13 +311,21 @@ export default function Settlement() {
 
                       <div style={{ marginTop: '1rem', display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
                         {isMyPayment ? (
-                          <motion.button className="btn-primary" whileTap={{ scale: 0.96 }}
-                            onClick={() => handleMarkPaid({ ...s, fromUser, toUser })}
-                            disabled={!!actioning || isOfflineMode}
-                            style={{ padding: '8px 20px', fontSize: '0.8rem' }}>
-                            <CheckCircle size={14} />
-                            {actioning === `pay-${s.from}` ? 'Recording...' : isOfflineMode ? '🔒 Backend Required' : '💸 Mark as Paid'}
-                          </motion.button>
+                          <>
+                            <motion.button className="btn-ghost" whileTap={{ scale: 0.96 }}
+                              onClick={() => handleMarkPaid({ ...s, fromUser, toUser })}
+                              disabled={!!actioning || isOfflineMode}
+                              style={{ padding: '8px 20px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                              💸 Mark manually
+                            </motion.button>
+                            <motion.button className="btn-primary" whileTap={{ scale: 0.96 }}
+                              onClick={() => handleRazorpay({ ...s, fromUser, toUser })}
+                              disabled={!!actioning || isOfflineMode}
+                              style={{ padding: '8px 20px', fontSize: '0.8rem', background: '#3b82f6', borderColor: '#2563eb' }}>
+                              <Zap size={14} />
+                              {actioning === `rzp-${s.from}` ? 'Generating...' : isOfflineMode ? '🔒 Backend Required' : '⚡ Pay via Razorpay'}
+                            </motion.button>
+                          </>
                         ) : (
                           <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                             Waiting for {s.fromName} to pay
@@ -337,10 +383,27 @@ export default function Settlement() {
                         </div>
                       </div>
 
-                      {/* Actions for pending_confirmation */}
-                      {h.status === 'pending_confirmation' && (
+                      {/* Actions for pending_confirmation & pending_payment */}
+                      {(h.status === 'pending_confirmation' || h.status === 'pending_payment') && (
                         <div style={{ marginTop: '10px', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                          {isMyReceipt && (
+                          {h.status === 'pending_payment' && (
+                            <>
+                              {h.razorpay_url && (
+                                <motion.a href={h.razorpay_url} target="_blank" className="btn-primary"
+                                  style={{ padding: '6px 16px', fontSize: '0.78rem', height: 'auto', gap: '6px', background: '#3b82f6', borderColor: '#2563eb', textDecoration: 'none' }}>
+                                  🔗 Open Link
+                                </motion.a>
+                              )}
+                              <motion.button whileTap={{ scale: 0.95 }} className="btn-primary"
+                                style={{ padding: '6px 16px', fontSize: '0.78rem', height: 'auto', gap: '6px' }}
+                                disabled={actioning === `verify-${h._id}`}
+                                onClick={() => handleVerifyRazorpay(h._id)}>
+                                <RefreshCw size={13} className={actioning === `verify-${h._id}` ? 'spin' : ''} /> Sync Status
+                              </motion.button>
+                            </>
+                          )}
+                          
+                          {h.status === 'pending_confirmation' && isMyReceipt && (
                             <motion.button whileTap={{ scale: 0.95 }} className="btn-primary"
                               style={{ padding: '6px 16px', fontSize: '0.78rem', height: 'auto', gap: '6px' }}
                               disabled={actioning === `confirm-${h._id}`}
