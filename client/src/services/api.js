@@ -58,6 +58,7 @@ export const createExpense  = (data)    => api.post('/expenses', data);
 export const updateExpense  = (id, data)=> api.put(`/expenses/${id}`, data);
 export const deleteExpense  = (id)      => api.delete(`/expenses/${id}`);
 export const getStats       = (groupId) => api.get(`/expenses/stats?groupId=${groupId}`);
+export const scanReceipt    = (imageBase64) => api.post('/vision/receipt', { imageBase64 });
 
 // ── Settlements ───────────────────────────────────────────────────────────────
 export const getSettlements        = (groupId, status) =>

@@ -34,6 +34,7 @@ app.use('/api/groups',        require('./routes/groups'));
 app.use('/api/expenses',      require('./routes/expenses'));
 app.use('/api/settlements',   require('./routes/settlements'));
 app.use('/api/join-requests', require('./routes/joinRequests'));
+app.use('/api/vision',        require('./routes/vision'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', db: 'SQLite', timestamp: new Date().toISOString() });
