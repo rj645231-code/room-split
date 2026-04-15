@@ -8,12 +8,15 @@ const scanReceipt = async (req, res) => {
       return res.status(400).json({ success: false, message: 'No image provided' });
     }
 
-    if (!process.env.GEMINI_API_KEY) {
+    let apiKey = process.env.GEMINI_API_KEY || '';
+    apiKey = apiKey.trim().replace(/^['"]|['"]$/g, '');
+
+    if (!apiKey) {
       return res.status(500).json({ success: false, message: 'Gemini API key is not configured on the server. Please add GEMINI_API_KEY to your .env file.' });
     }
 
     // Initialize genAI
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const ai = new GoogleGenAI({ apiKey });
 
     // Parse base64 string
     const match = imageBase64.match(/^data:(image\/\w+);base64,(.+)$/);
