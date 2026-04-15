@@ -24,6 +24,7 @@ export default function Profile() {
     dietary: [],
     dislikes: '',
     allergies: '',
+    budgetStartDay: 1,
   });
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function Profile() {
         dietary: currentUser.dietary || [],
         dislikes: (currentUser.dislikes || []).join(', '),
         allergies: (currentUser.allergies || []).join(', '),
+        budgetStartDay: currentUser.budget_start_day || 1,
       });
     }
   }, [currentUser]);
@@ -52,6 +54,7 @@ export default function Profile() {
         dietary: form.dietary,
         dislikes: form.dislikes.split(',').map(s => s.trim()).filter(Boolean),
         allergies: form.allergies.split(',').map(s => s.trim()).filter(Boolean),
+        budget_start_day: parseInt(form.budgetStartDay) || 1,
       };
 
       const res = await updateProfile(payload);
@@ -118,6 +121,33 @@ export default function Profile() {
                     }} 
                   />
                 ))}
+              </div>
+            </div>
+
+            <div className="divider" />
+
+            {/* Budget Cycle */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
+                <span style={{ fontSize: '1.1rem' }}>📅</span>
+                <div>
+                  <h3 style={{ fontFamily: 'Poppins', fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-primary)' }}>Budget Cycle</h3>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Personalise your "My Month" start date for the analytics dashboard</p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>My month starts on day</label>
+                <select className="input-glass" style={{ width: 80 }}
+                  value={form.budgetStartDay}
+                  onChange={e => setForm(f => ({ ...f, budgetStartDay: parseInt(e.target.value) }))}>
+                  {Array.from({ length: 28 }, (_, i) => i + 1).map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>of each month</span>
+              </div>
+              <div style={{ marginTop: '8px', padding: '8px 12px', background: 'rgba(99,102,241,0.07)', borderRadius: 8, border: '1px solid rgba(99,102,241,0.2)', fontSize: '0.75rem', color: '#a5b4fc' }}>
+                💡 Useful if your stipend / salary / rent cycle starts mid-month (e.g. 25th)
               </div>
             </div>
 

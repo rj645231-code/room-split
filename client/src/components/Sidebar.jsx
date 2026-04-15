@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Receipt, CreditCard, Users, Zap, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Receipt, CreditCard, Users, Zap, Sun, Moon, BarChart2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import Logo from './Logo';
 
@@ -9,6 +9,7 @@ const navItems = [
   { path: '/expenses',     icon: Receipt,         label: 'Expenses'   },
   { path: '/transactions', icon: CreditCard,      label: 'History'    },
   { path: '/settlement',   icon: Zap,             label: 'Settle Up'  },
+  { path: '/analytics',   icon: BarChart2,        label: 'My Budget'  },
   { path: '/members',      icon: Users,           label: 'Members'    },
 ];
 

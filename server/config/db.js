@@ -143,6 +143,7 @@ async function initDB() {
     await safeAlter(`ALTER TABLE expenses ADD COLUMN created_by TEXT`);
     await safeAlter(`ALTER TABLE settlements ADD COLUMN razorpay_link_id TEXT`);
     await safeAlter(`ALTER TABLE settlements ADD COLUMN razorpay_url TEXT`);
+    await safeAlter(`ALTER TABLE users ADD COLUMN budget_start_day INTEGER DEFAULT 1`);
 
     try {
       await client.execute(`

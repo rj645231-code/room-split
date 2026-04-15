@@ -9,6 +9,7 @@ import Transactions from './pages/Transactions';
 import Settlement from './pages/Settlement';
 import Members from './pages/Members';
 import Profile from './pages/Profile';
+import Analytics from './pages/Analytics';
 import Auth from './components/Auth';
 
 const pageVariants = {
@@ -29,6 +30,7 @@ function AnimatedRoutes() {
           <Route path="/settlement"   element={<Settlement />}  />
           <Route path="/members"      element={<Members />}     />
           <Route path="/profile"      element={<Profile />}     />
+          <Route path="/analytics"    element={<Analytics />}   />
           <Route path="*"             element={<Navigate to="/" />} />
         </Routes>
       </motion.div>

@@ -97,7 +97,7 @@ exports.getMe = async (req, res) => {
 };
 
 exports.updateProfile = async (req, res) => {
-  const { name, username, color, avatar, dietary, dislikes, allergies } = req.body;
+  const { name, username, color, avatar, dietary, dislikes, allergies, budget_start_day } = req.body;
   try {
     const userRow = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
     if (!userRow) return res.status(404).json({ success: false, message: 'User not found' });
@@ -110,7 +110,7 @@ exports.updateProfile = async (req, res) => {
 
     await db.prepare(`
       UPDATE users
-      SET name = ?, username = ?, color = ?, avatar = ?, dietary = ?, dislikes = ?, allergies = ?
+      SET name = ?, username = ?, color = ?, avatar = ?, dietary = ?, dislikes = ?, allergies = ?, budget_start_day = ?
       WHERE id = ?
     `).run(
       name || userRow.name,
@@ -120,6 +120,7 @@ exports.updateProfile = async (req, res) => {
       dietary ? JSON.stringify(dietary) : userRow.dietary,
       dislikes ? JSON.stringify(dislikes) : userRow.dislikes,
       allergies ? JSON.stringify(allergies) : userRow.allergies,
+      budget_start_day != null ? parseInt(budget_start_day) : (userRow.budget_start_day || 1),
       req.user.id
     );
 
