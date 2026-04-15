@@ -143,7 +143,6 @@ export default function BillDownloadBtn({ group, expenses, settlements, balances
 
       // 7. Save and open
       doc.save(`RoomSplit_${groupName.replace(/\s+/g, '_')}_Bill.pdf`);
-      doc.save(`RoomSplit_${groupName.replace(/\s+/g, '_')}_Bill.pdf`);
       return true;
     } catch (error) {
       console.error('PDF Generation Error:', error);
