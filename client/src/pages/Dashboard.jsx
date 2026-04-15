@@ -8,6 +8,7 @@ import { MOCK_DATA } from '../services/mockData';
 import StatCard from '../components/StatCard';
 import TopBar from '../components/TopBar';
 import AddExpenseModal from '../components/AddExpenseModal';
+import BillDownloadBtn from '../components/BillDownloadBtn';
 
 const CATEGORY_COLORS = {
   grocery: '#10b981', meal: '#f59e0b', utility: '#6366f1',
@@ -20,6 +21,7 @@ const CATEGORY_ICONS = {
 export default function Dashboard() {
   const { activeGroup, users, isOfflineMode } = useApp();
   const [groupData, setGroupData] = useState(null);
+  const [allExpenses, setAllExpenses] = useState([]);
   const [recentExpenses, setRecentExpenses] = useState([]);
   const [settlements, setSettlements] = useState([]);
   const [totalExpenseCount, setTotalExpenseCount] = useState(0);
@@ -43,14 +45,16 @@ export default function Dashboard() {
           getStats(activeGroup._id),
         ]);
         setGroupData(groupRes.data.data);
-        const allExpenses = expRes.data.data || [];
-        setRecentExpenses(allExpenses.slice(0, 5));
-        setTotalExpenseCount(statsRes.data.data?.count ?? allExpenses.length);
+        const fetchedExpenses = expRes.data.data || [];
+        setAllExpenses(fetchedExpenses);
+        setRecentExpenses(fetchedExpenses.slice(0, 5));
+        setTotalExpenseCount(statsRes.data.data?.count ?? fetchedExpenses.length);
         setSettlements(settleRes.data.data?.settlements || []);
       }
     } catch (err) {
       // Fallback to mock even if individual call fails
       setGroupData(MOCK_DATA.groupDetail);
+      setAllExpenses(MOCK_DATA.expenses);
       setRecentExpenses(MOCK_DATA.expenses.slice(0, 5));
       setSettlements(MOCK_DATA.settlements);
       setTotalExpenseCount(MOCK_DATA.expenses.length);
@@ -95,9 +99,17 @@ export default function Dashboard() {
         title="Dashboard"
         subtitle={activeGroup ? `${activeGroup.members?.length} members · ${activeGroup.currency || 'INR'}` : 'No group selected'}
         actions={
-          <button className="btn-primary" onClick={() => setModalOpen(true)}>
-            <Plus size={15} /> Add Expense
-          </button>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <BillDownloadBtn 
+              group={groupData?.group} 
+              expenses={allExpenses} 
+              settlements={settlements} 
+              balances={groupData?.balances} 
+            />
+            <button className="btn-primary" onClick={() => setModalOpen(true)}>
+              <Plus size={15} /> Add Expense
+            </button>
+          </div>
         }
       />
 
