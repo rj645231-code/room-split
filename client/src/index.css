@@ -214,6 +214,10 @@ body {
   padding: 1.25rem 1.5rem;
   border-radius: var(--radius-xl);
   transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .stat-card:hover { transform: translateY(-3px); }
 .stat-card-glow {
@@ -222,7 +226,44 @@ body {
   border-radius: inherit;
 }
 @media (max-width: 640px) {
-  .stat-card { padding: 1rem 1.1rem !important; }
+  .stat-card { padding: 1rem 1.1rem !important; min-height: 120px; }
+}
+
+/* ── Dashboard Layout ── */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.dashboard-main {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1.5rem;
+  align-items: start;
+}
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@media (max-width: 1024px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .dashboard-main {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+@media (max-width: 640px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
 }
 
 /* ── Timeline ── */

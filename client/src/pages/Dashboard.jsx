@@ -102,14 +102,14 @@ export default function Dashboard() {
       />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mb-6 lg:mb-8">
+      <div className="dashboard-stats">
         <StatCard icon={Wallet}       label="Total Group Spend"  value={totalSpent}         color="purple" delay={0}    />
         <StatCard icon={TrendingDown} label="You Owe"            value={iOwe}               color="red"    delay={0.07} />
         <StatCard icon={TrendingUp}   label="You Get Back"       value={iGetBack}           color="green"  delay={0.14} />
         <StatCard icon={Receipt}      label="Total Expenses"     value={totalExpenseCount}  color="amber"  prefix="" delay={0.21} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 lg:gap-6 items-start">
+      <div className="dashboard-main">
         {/* Recent Expenses */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
           <div className="card-glass" style={{ padding: '1.5rem' }}>
@@ -166,7 +166,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Right column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="dashboard-right">
           {/* Balances */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <div className="card-glass" style={{ padding: '1.25rem' }}>
