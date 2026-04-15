@@ -13,6 +13,7 @@ export const AppProvider = ({ children }) => {
   const [groups, setGroups] = useState([]);
   const [users, setUsers] = useState([]);
   const [activeGroup, setActiveGroupState] = useState(null);
+  const [_pendingActiveGroupId] = useState(() => localStorage.getItem('rs-active-group') || null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isOfflineMode, setIsOfflineMode] = useState(false);
@@ -61,6 +62,7 @@ export const AppProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('rs-token');
+    localStorage.removeItem('rs-active-group');
     setToken(null);
     setCurrentUser(null);
     setActiveGroupState(null);
@@ -85,8 +87,13 @@ export const AppProvider = ({ children }) => {
 
       setActiveGroupState(prev => {
         if (groupList.length === 0) return null;
-        const existing = groupList.find(g => g._id === prev?._id);
-        return existing || groupList[0];
+        // Prefer: 1) currently active, 2) last persisted in localStorage, 3) first in list
+        const savedId = localStorage.getItem('rs-active-group');
+        const existing = groupList.find(g => g._id === prev?._id)
+          || groupList.find(g => g._id === savedId);
+        const resolved = existing || groupList[0];
+        localStorage.setItem('rs-active-group', resolved._id);
+        return resolved;
       });
 
       // Fetch pending invites for current user
@@ -112,6 +119,7 @@ export const AppProvider = ({ children }) => {
 
   const switchGroup = async (group) => {
     setActiveGroupState(group);
+    if (group?._id) localStorage.setItem('rs-active-group', group._id);
     if (!group || isOfflineMode) return;
     try {
       const res = await getGroups();
@@ -130,7 +138,9 @@ export const AppProvider = ({ children }) => {
       if (list.length > 0) {
         setActiveGroupState(prev => {
           const updated = list.find(g => g._id === prev?._id);
-          return updated || list[0];
+          const resolved = updated || list[0];
+          localStorage.setItem('rs-active-group', resolved._id);
+          return resolved;
         });
       }
     } catch {}

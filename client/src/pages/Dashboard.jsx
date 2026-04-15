@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Wallet, TrendingDown, TrendingUp, Receipt, Plus, Sparkles, ArrowRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -114,9 +115,9 @@ export default function Dashboard() {
           <div className="card-glass" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem' }}>Recent Expenses</h2>
-              <a href="/expenses" style={{ fontSize: '0.8rem', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Link to="/expenses" style={{ fontSize: '0.8rem', color: '#818cf8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
                 View all <ArrowRight size={13} />
-              </a>
+              </Link>
             </div>
 
             {recentExpenses.length === 0 ? (
@@ -217,11 +218,11 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
-                <a href="/settlement" style={{ display: 'block', textAlign: 'center', marginTop: '0.75rem',
+                <Link to="/settlement" style={{ display: 'block', textAlign: 'center', marginTop: '0.75rem',
                   fontSize: '0.8rem', color: '#818cf8', textDecoration: 'none', padding: '8px',
                   borderRadius: 8, background: 'rgba(99,102,241,0.08)' }}>
                   View full settlement plan →
-                </a>
+                </Link>
               </div>
             </motion.div>
           )}
