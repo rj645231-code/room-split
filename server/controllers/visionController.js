@@ -63,10 +63,10 @@ const scanReceipt = async (req, res) => {
       });
     } catch (e) {
       if (e.status === 503 || String(e.message).includes('503') || String(e.message).includes('UNAVAILABLE')) {
-        // Fallback to gemini-1.5-flash
-        console.warn('gemini-2.5-flash unavailable, falling back to gemini-1.5-flash');
+        // Fallback to gemini-2.0-flash
+        console.warn('gemini-2.5-flash unavailable, falling back to gemini-2.0-flash');
         response = await ai.models.generateContent({
-          model: 'gemini-1.5-flash',
+          model: 'gemini-2.0-flash',
           contents: [
             {
                inlineData: { data, mimeType }
