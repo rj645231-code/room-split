@@ -319,18 +319,23 @@ export default function Settlement() {
                               💸 Mark manually
                             </motion.button>
                             
-                            <motion.a className="btn-primary" whileTap={{ scale: 0.96 }}
-                              href={`upi://pay?pa=demo@ybl&pn=${encodeURIComponent(toUser?.name || 'Roommate')}&am=${s.amount}&cu=INR&tn=RoomSplit`}
-                              style={{ padding: '8px 16px', fontSize: '0.8rem', background: '#10b981', borderColor: '#059669', textDecoration: 'none', color: '#fff', gap: '6px' }}
-                              onClick={(e) => {
+                            <motion.button className="btn-primary" whileTap={{ scale: 0.96 }}
+                              style={{ padding: '8px 16px', fontSize: '0.8rem', background: '#10b981', borderColor: '#059669', color: '#fff', gap: '6px' }}
+                              onClick={() => {
                                 if (window.innerWidth > 768) {
-                                  e.preventDefault();
-                                  toast('Scan QR or open on phone to use UPI apps (GPay, PhonePe).', { icon: '📱' });
+                                  return toast('Open on a mobile phone to use native UPI apps like GPay or PhonePe.', { icon: '📱' });
                                 }
+                                let upiId = toUser?.upiId;
+                                if (!upiId) {
+                                  upiId = window.prompt(`Enter ${s.toName}'s valid UPI ID to send ₹${s.amount}:`, '');
+                                  if (!upiId || upiId.trim() === '') return;
+                                }
+                                const link = `upi://pay?pa=${upiId.trim()}&pn=${encodeURIComponent(s.toName)}&am=${s.amount}&cu=INR&tn=RoomSplit`;
+                                window.location.href = link;
                                 setTimeout(() => handleMarkPaid({ ...s, fromUser, toUser }), 2000);
                               }}>
                               <Smartphone size={14} /> Direct UPI
-                            </motion.a>
+                            </motion.button>
 
                             <motion.button className="btn-primary" whileTap={{ scale: 0.96 }}
                               onClick={() => handleRazorpay({ ...s, fromUser, toUser })}
