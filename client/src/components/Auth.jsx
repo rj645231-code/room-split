@@ -71,31 +71,35 @@ export default function Auth() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', paddingTop: '7rem' }}>
         
         {/* ── Hero Section ────────────────────────────────────────────────────── */}
-        <section style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4rem', minHeight: '75vh', paddingBottom: '5rem' }}>
+        <section style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4rem', minHeight: '75vh', paddingBottom: '3rem' }}>
           {/* Left Text */}
           <motion.div style={{ flex: '1 1 500px', zIndex: 10 }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 99, color: '#818cf8', fontSize: '0.75rem', fontWeight: 700, marginBottom: '1.5rem' }}>
-              🇮🇳 Built for Indian Roommates
+              ✨ Built for Indian Roommates
             </div>
             
             <h1 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: 'clamp(2.5rem, 5vw, 4.2rem)', lineHeight: 1.1, color: 'var(--text-primary)', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
               No more awkward calculations. 
-              <br /><span style={{ color: '#818cf8' }}>Split fairly in seconds.</span>
+              <br /><span style={{ color: '#6366f1' }}>Split fairly in seconds.</span>
             </h1>
             
-            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginBottom: '2rem', maxWidth: 520, lineHeight: 1.6 }}>
-              Roommates in India love this: Smart splits, instant Razorpay UPI links, and automated math so you never have to remind anyone for money again.
+            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginBottom: '1.5rem', maxWidth: 540, lineHeight: 1.6 }}>
+              Stop arguing over rent, groceries, Zomato orders, electricity, and WiFi bills. Create groups, scan bills with AI, split item-wise or unequally, and settle instantly with Razorpay UPI links. No more reminders or Excel sheets.
             </p>
+
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 8 }}><CheckCircle2 size={16} color="#10b981" /> AI Receipt Scanner</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 8 }}><CheckCircle2 size={16} color="#10b981" /> Item-wise Splits (Zomato/Swiggy)</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 8 }}><CheckCircle2 size={16} color="#10b981" /> Instant Razorpay UPI + Two-way Confirmation</li>
+            </ul>
             
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem', alignItems: 'flex-start' }}>
               <button className="btn-primary" onClick={scrollToAuth} style={{ padding: '1.1rem 2.2rem', fontSize: '1.05rem', borderRadius: 12, boxShadow: '0 10px 25px rgba(99,102,241,0.3)' }}>
                 Try Room Split Free <ArrowRight size={18} style={{ marginLeft: 8 }} />
               </button>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#fbbf24', fontSize: '0.85rem', fontWeight: 600 }}>
-              {[1,2,3,4,5].map(v => <Star key={v} size={14} fill="currentColor" />)}
-              <span style={{ color: 'var(--text-secondary)', marginLeft: 6 }}>Trusted by roommates in Ahmedabad, Bangalore, Delhi & more.</span>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <ShieldCheck size={14} /> No credit card required • Takes 30 seconds
+              </div>
             </div>
           </motion.div>
 
@@ -165,16 +169,31 @@ export default function Auth() {
           </motion.div>
         </section>
 
+        {/* ── Trust Bar ────────────────────────────────────── */}
+        <section style={{ padding: '2rem 0 4rem 0', borderBottom: '1px solid var(--border-glass)' }}>
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, color: '#fbbf24', fontSize: '0.9rem', fontWeight: 600, marginBottom: '8px' }}>
+              {[1,2,3,4,5].map(v => <Star key={v} size={16} fill="currentColor" />)}
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Trusted by roommates in Ahmedabad, Bangalore, Delhi, Mumbai & more</p>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem', color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><ShieldCheck size={18} color="#10b981" /> Razorpay Verified</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><CheckCircle2 size={18} color="#6366f1" /> 100% Free for roommates</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Smartphone size={18} color="#f59e0b" /> Secure UPI Payments</div>
+          </div>
+        </section>
+
         {/* ── VS Splitwise (Why Choose Us) ────────────────────────────────────── */}
-        <section style={{ padding: '3rem 0', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ width: '100%', maxWidth: 900, background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 24, padding: '3rem 2rem', textAlign: 'center' }}>
-             <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.75rem', color: 'var(--text-primary)', marginBottom: '2rem' }}>Why choose Room Split?</h2>
+        <section style={{ padding: '4rem 0', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: '100%', maxWidth: 900, background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 10px 20px -5px rgba(0,0,0,0.03)', borderRadius: 24, padding: '3rem 2rem', textAlign: 'center' }}>
+             <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.75rem', color: 'var(--text-primary)', marginBottom: '2rem' }}>Why roommates in India choose Room Split</h2>
              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', textAlign: 'left' }}>
                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                  <CheckCircle2 color="#818cf8" size={24} style={{ flexShrink: 0 }} />
                  <div>
-                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Instant UPI Payments</div>
-                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}>Generate Razorpay links. No copying UPI IDs manually.</div>
+                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Built for India</div>
+                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}>Supports ₹ and native Razorpay UPI integration out of the box.</div>
                  </div>
                </div>
                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -187,15 +206,15 @@ export default function Auth() {
                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                  <CheckCircle2 color="#818cf8" size={24} style={{ flexShrink: 0 }} />
                  <div>
-                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Completely Free</div>
-                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}>No annoying ads, no premium limits. Built for real roommates.</div>
+                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Personal analytics</div>
+                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}>Track your spending with visual charts & heatmaps.</div>
                  </div>
                </div>
                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                  <CheckCircle2 color="#818cf8" size={24} style={{ flexShrink: 0 }} />
                  <div>
-                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Simpler & Cleaner</div>
-                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}>A beautiful, modern interface that works flawlessly on mobile.</div>
+                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Two-way verification</div>
+                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}>Mutual confirmation for payments ensures complete trust.</div>
                  </div>
                </div>
              </div>
@@ -205,17 +224,19 @@ export default function Auth() {
         {/* ── Features Section ────────────────────────────────────────────────── */}
         <section style={{ padding: '5rem 0' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2.25rem', color: 'var(--text-primary)' }}>Everything you need to manage shared living</h2>
+            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2.25rem', color: 'var(--text-primary)' }}>Everything you need for fair roommate living</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             {[
-              { title: 'Smart Settlements', desc: 'Our algorithm reduces the total number of transactions needed to settle debts across your entire group.', icon: Calculator, color: '#f59e0b' },
-              { title: 'Any Split Type', desc: 'Split equally, by exact amounts, or by custom percentages. Perfect for couples or unmatched roommates.', icon: SplitSquareHorizontal, color: '#10b981' },
-              { title: 'Personal Analytics', desc: 'Track your own personal budget cycles. See where your money goes every month with visual charts.', icon: PieChart, color: '#ec4899' },
-              { title: '1-Click UPI Payments', desc: 'Settle debts instantly via Razorpay payment links. Payments are automatically verified and synced.', icon: Zap, color: '#3b82f6' },
+              { title: 'AI Receipt Scanner', desc: 'Scan any grocery or restaurant bill. Our AI auto-detects items, prices, and quantities instantly.', icon: Focus, color: '#ec4899' },
+              { title: 'Item-wise & Unequal Splits', desc: 'Split perfectly. Assign exactly who ate what, use custom percentages, or split unequally with ease.', icon: SplitSquareHorizontal, color: '#10b981' },
+              { title: 'Smart Minimum Settlements', desc: 'Our algorithm automatically restructures group debts to reduce the total number of transactions needed.', icon: Calculator, color: '#f59e0b' },
+              { title: 'Two-way Payment Confirmation', desc: 'Mark debts as paid and have the recipient confirm them to prevent disputes and keep histories accurate.', icon: ShieldCheck, color: '#6366f1' },
+              { title: 'Personal My Budget', desc: 'A private space to view spending charts, heatmaps, top categories, and monthly projections.', icon: PieChart, color: '#8b5cf6' },
+              { title: 'Group Dashboard & History', desc: 'A unified ledger where everyone can seamlessly track expense history, balances, and group members.', icon: Users, color: '#3b82f6' },
             ].map((feature, i) => (
-              <div key={i} className="card-glass" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div key={i} className="card-glass" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
                 <div style={{ width: 50, height: 50, borderRadius: 14, background: `${feature.color}22`, color: feature.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <feature.icon size={24} />
                 </div>
@@ -228,22 +249,22 @@ export default function Auth() {
 
         {/* ── How It Works ── */}
         <section style={{ padding: '3rem 0' }}>
-          <div style={{ background: '#F8FAFC', borderRadius: 24, padding: '4rem 2rem', border: '1px solid var(--border-glass)' }}>
+          <div style={{ background: '#F8FAFC', borderRadius: 24, padding: '4rem 0' }}>
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2rem', color: 'var(--text-primary)' }}>How it works</h2>
+              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2.25rem', color: 'var(--text-primary)' }}>How Room Split Works</h2>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', position: 'relative' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '3rem', position: 'relative', padding: '0 2rem' }}>
               {[
-                { step: '1', title: 'Create a Group', desc: 'Sign up and create a group for your apartment, trip, or event. Invite members via link.' },
-                { step: '2', title: 'Add Expenses', desc: 'Add bills manually or via photo. Split unequally, by percentage, or item-wise.' },
-                { step: '3', title: 'Settle Up Securely', desc: 'When you are ready, check balances and settle up instantly via Razorpay UPI links.' },
+                { step: '1', title: 'Create a Group', desc: 'Sign up with email, create a group for your flat, PG, trip or event. Invite members via link. Switch groups easily with dropdown.' },
+                { step: '2', title: 'Add Expenses', desc: 'Scan receipt with AI (auto-detects items) or add manually. Add title, category, paid by, note, then split item-wise, by percentage, or unequally.' },
+                { step: '3', title: 'Settle Up Securely', desc: 'See clear balances. Mark as paid → other person confirms receipt → transaction marked settled. Instant Razorpay UPI links.' },
               ].map((step, i) => (
                 <div key={i} style={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
-                  <div style={{ width: 64, height: 64, background: '#6366f1', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 800, margin: '0 auto 1.5rem', boxShadow: '0 0 0 10px rgba(99,102,241,0.1)' }}>
+                  <div style={{ width: 72, height: 72, background: '#7C3AED', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.75rem', fontWeight: 800, margin: '0 auto 1.5rem', boxShadow: '0 0 0 8px rgba(124,58,237,0.1)' }}>
                     {step.step}
                   </div>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>{step.title}</h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{step.desc}</p>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>{step.title}</h3>
+                  <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>{step.desc}</p>
                 </div>
               ))}
             </div>
@@ -258,11 +279,11 @@ export default function Auth() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             {[
               { quote: "Finally no more Excel sheets for our PG rent! It calculates exactly who needs to pay who.", author: "Priya, Ahmedabad" },
-              { quote: "UPI links made settling super easy. I just click 'Settle Up', and the app automatically marks the debt as paid.", author: "Rahul, Bangalore" },
-              { quote: "Being able to do unequal item-wise splits for Swiggy when someone is vegan changed our lives.", author: "Arjun, Delhi" }
+              { quote: "AI scan + item-wise split for Swiggy is a game changer.", author: "Arjun, Bangalore" },
+              { quote: "Two-way confirmation removed all payment fights.", author: "Rahul, Delhi" }
             ].map((t, i) => (
-              <div key={i} className="card-glass" style={{ padding: '2rem', position: 'relative' }}>
-                <MessageSquare size={32} color="rgba(99,102,241,0.2)" style={{ position: 'absolute', top: 20, right: 20 }} />
+              <div key={i} className="card-glass" style={{ padding: '2rem', position: 'relative', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+                <MessageSquare size={32} color="rgba(99,102,241,0.1)" style={{ position: 'absolute', top: 20, right: 20 }} />
                 <div style={{ display: 'flex', gap: 4, marginBottom: '1rem', color: '#fbbf24' }}>
                   {[1,2,3,4,5].map(v => <Star key={v} size={16} fill="currentColor" />)}
                 </div>
@@ -277,16 +298,16 @@ export default function Auth() {
         <section id="auth-section" ref={authRef} style={{ padding: '4rem 0 6rem 0', display: 'flex', justifyContent: 'center' }}>
           <motion.div
             className="card-glass"
-            style={{ width: '100%', maxWidth: 450, padding: '2.5rem 2rem', position: 'relative', zIndex: 10, background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.08)' }}
+            style={{ width: '100%', maxWidth: 460, padding: '3rem 2.5rem', position: 'relative', zIndex: 10, background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.1)' }}
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
-              <Logo size={42} />
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', marginTop: '1rem', color: '#0f172a' }}>
-                Ready to split?
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2.5rem' }}>
+              <Logo size={48} />
+              <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.6rem', marginTop: '1.25rem', color: '#0f172a', textAlign: 'center' }}>
+                Ready to stop arguing over money?
               </h2>
-              <p style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', marginTop: '0.5rem' }}>
-                {isLogin ? 'Sign in to access your shared expenses.' : 'Create a free account and start tracking today.'}
+              <p style={{ color: '#64748b', fontSize: '0.9rem', textAlign: 'center', marginTop: '0.5rem' }}>
+                Join thousands of roommates splitting expenses fairly.
               </p>
             </div>
 
