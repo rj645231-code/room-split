@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Trash2, Sparkles, ShoppingCart, Utensils, Zap, Car, Music, WifiOff } from 'lucide-react';
-import { createExpense, getSmartSuggestions } from '../services/api';
+import { X, Plus, Trash2, Sparkles, ShoppingCart, Utensils, Zap, Car, Music, WifiOff, Camera } from 'lucide-react';
+import { createExpense, getSmartSuggestions, scanReceipt } from '../services/api';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
+import { useRef } from 'react';
 
 const CATEGORIES = [
   { value: 'grocery',       label: 'Grocery',   icon: ShoppingCart },
@@ -28,8 +29,10 @@ export default function AddExpenseModal({ open, onClose, onSuccess }) {
   });
   const [items, setItems] = useState([emptyItem()]);
   const [loading, setLoading] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
   const [suggestions, setSuggestions] = useState({});
   const [step, setStep] = useState(1); // 1=details, 2=items, 3=review
+  const fileInputRef = useRef(null);
 
   // Load smart suggestions
   useEffect(() => {
@@ -80,7 +83,50 @@ export default function AddExpenseModal({ open, onClose, onSuccess }) {
     ));
   };
 
+  const handleScanReceipt = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
+    if (isOfflineMode) {
+      toast.error('Start the backend to use Receipt Scanner');
+      return;
+    }
+
+    setIsScanning(true);
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      try {
+        const base64Data = reader.result;
+        const res = await scanReceipt(base64Data);
+        if (res.data.success && res.data.data) {
+          const parsed = res.data.data;
+          
+          setForm(f => ({ ...f, title: parsed.merchant || 'Receipt Scan' }));
+          
+          if (parsed.items && parsed.items.length > 0) {
+            setItems(parsed.items.map(i => ({
+              name: i.name,
+              totalCost: i.price,
+              consumers: []
+            })));
+          }
+          
+          toast.success('Receipt scanned successfully!');
+          setStep(2); // Auto jump to items view
+        }
+      } catch (err) {
+         toast.error(err.response?.data?.message || 'Failed to scan receipt');
+      } finally {
+        setIsScanning(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }
+    };
+    reader.onerror = () => {
+      setIsScanning(false);
+      toast.error('Failed to read image file');
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = async () => {
     if (!form.paidBy) return toast.error('Select who paid');
@@ -175,7 +221,14 @@ export default function AddExpenseModal({ open, onClose, onSuccess }) {
                 {step === 1 && (
                   <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-
+                      <div style={{ padding: '1rem', background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))', borderRadius: '12px', border: '1px dashed rgba(99,102,241,0.4)', textAlign: 'center' }}>
+                        <input type="file" accept="image/*" capture="environment" hidden ref={fileInputRef} onChange={handleScanReceipt} />
+                        <button className="btn-primary" style={{ margin: '0 auto' }} onClick={() => fileInputRef.current.click()} disabled={isScanning}>
+                          <Camera size={16} /> {isScanning ? 'Analyzing Receipt...' : 'Scan Receipt'}
+                        </button>
+                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px' }}>Auto-extract items with AI 🪄</p>
+                      </div>
+                      <div className="divider" />
                       <div>
                         <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 500, marginBottom: '6px', display: 'block' }}>Title (optional)</label>
                         <input className="input-glass" placeholder="e.g. Weekly grocery run" value={form.title}
