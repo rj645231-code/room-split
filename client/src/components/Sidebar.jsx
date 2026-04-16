@@ -18,6 +18,7 @@ export default function Sidebar() {
     activeGroup, groups, setActiveGroup,
     sidebarOpen, setSidebarOpen,
     isOfflineMode, theme, toggleTheme,
+    currentUser, logout
   } = useApp();
 
   return (
@@ -154,15 +155,27 @@ export default function Sidebar() {
 
         {/* User Profile & Logout */}
         <div style={{ padding: '1rem 1.25rem', borderTop: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <NavLink to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }} onClick={() => setSidebarOpen(false)}>
-            <div className="avatar avatar-sm" style={{ background: 'rgba(99,102,241,0.2)', color: '#4f46e5', fontSize: '0.7rem' }}>
-              👤
+          <NavLink to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', overflow: 'hidden' }} onClick={() => setSidebarOpen(false)}>
+            <div className="avatar avatar-sm" style={{ 
+              background: currentUser?.color ? `${currentUser.color}22` : 'rgba(99,102,241,0.2)', 
+              color: currentUser?.color || '#4f46e5', 
+              border: `2px solid ${currentUser?.color ? `${currentUser.color}44` : 'rgba(99,102,241,0.2)'}`,
+              fontSize: '0.8rem', fontWeight: 700 
+            }}>
+              {currentUser?.name?.[0]?.toUpperCase() || '👤'}
             </div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-              Profile
+            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                {currentUser?.name || 'Profile'}
+              </div>
+              {currentUser?.username && (
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                  @{currentUser.username}
+                </div>
+              )}
             </div>
           </NavLink>
-          <button onClick={useApp().logout} style={{ background: 'none', border: 'none', color: '#f87171', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={logout} style={{ background: 'none', border: 'none', color: '#f87171', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', padding: '4px' }}>
             Logout
           </button>
         </div>
