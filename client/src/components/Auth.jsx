@@ -55,13 +55,19 @@ export default function Auth() {
             <Logo size={32} />
             <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.25rem', color: '#0f172a' }}>Room Split</span>
           </div>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <button className="btn-ghost" onClick={handleTryDemo} style={{ display: window.innerWidth > 600 ? 'block' : 'none', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-              Try Demo
-            </button>
-            <button className="btn-primary" onClick={scrollToAuth} style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-              Sign In
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div style={{ display: window.innerWidth > 768 ? 'flex' : 'none', gap: '1.5rem', fontSize: '0.9rem', color: '#475569', fontWeight: 500 }}>
+              <a href="#how-it-works" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>How it Works</a>
+              <a href="#features" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>Features</a>
+            </div>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button className="btn-ghost" onClick={handleTryDemo} style={{ display: window.innerWidth > 600 ? 'block' : 'none', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                Try Demo
+              </button>
+              <button className="btn-primary" onClick={scrollToAuth} style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                Sign In
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -76,7 +82,7 @@ export default function Auth() {
               ✨ Built for Indian Roommates
             </div>
             
-            <h1 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: 'clamp(2.5rem, 5vw, 4.2rem)', lineHeight: 1.1, color: 'var(--text-primary)', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: 'clamp(2.5rem, 6.5vw, 4.8rem)', lineHeight: 1.1, color: 'var(--text-primary)', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
               No more awkward calculations. 
               <br /><span style={{ color: '#6366f1' }}>Split fairly in seconds.</span>
             </h1>
@@ -220,7 +226,7 @@ export default function Auth() {
         </section>
 
         {/* ── Features Section ────────────────────────────────────────────────── */}
-        <section style={{ padding: '5rem 0' }}>
+        <section id="features" style={{ padding: '5rem 0' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2.25rem', color: 'var(--text-primary)' }}>Everything you need for fair roommate living</h2>
           </div>
@@ -246,7 +252,7 @@ export default function Auth() {
         </section>
 
         {/* ── How It Works ── */}
-        <section style={{ padding: '3rem 0' }}>
+        <section id="how-it-works" style={{ padding: '3rem 0' }}>
           <div style={{ background: '#F8FAFC', borderRadius: 24, padding: '4rem 0' }}>
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
               <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2.25rem', color: 'var(--text-primary)' }}>How Room Split Works</h2>
@@ -266,6 +272,59 @@ export default function Auth() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── Visuals Section ────────────────────────────────────────────────── */}
+        <section style={{ padding: '4rem 0' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2.25rem', color: 'var(--text-primary)' }}>See Room Split in Action</h2>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem' }}>
+            
+            {/* Mock Screen 1 */}
+            <div style={{ flex: '1 1 260px', maxWidth: 300, background: '#ffffff', borderRadius: 24, border: '6px solid #f1f5f9', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc', fontWeight: 700, fontSize: '0.9rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Focus size={16} color="#6366f1" /> AI Scan
+              </div>
+              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ height: 120, background: '#e0e7ff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5', fontSize: '0.8rem', fontWeight: 600 }}>Scanning Swiggy Bill...</div>
+                <div style={{ height: 16, background: '#f1f5f9', borderRadius: 6, width: '80%' }} />
+                <div style={{ height: 16, background: '#f1f5f9', borderRadius: 6, width: '60%' }} />
+                <div style={{ height: 16, background: '#f1f5f9', borderRadius: 6, width: '40%' }} />
+              </div>
+            </div>
+
+            {/* Mock Screen 2 */}
+            <div style={{ flex: '1 1 260px', maxWidth: 300, background: '#ffffff', borderRadius: 24, border: '6px solid #f1f5f9', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc', fontWeight: 700, fontSize: '0.9rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Zap size={16} color="#10b981" /> Settle Up
+              </div>
+              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Total Balance</div>
+                <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f87171' }}>- ₹1,250</div>
+                <div style={{ width: '100%', padding: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#0f172a' }}>Rahul</div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#f87171' }}>₹850</div>
+                </div>
+                <div style={{ width: '100%', padding: '10px', background: '#6366f1', color: '#fff', textAlign: 'center', borderRadius: 10, fontSize: '0.85rem', fontWeight: 600, marginTop: 8 }}>Pay via Razorpay</div>
+              </div>
+            </div>
+
+            {/* Mock Screen 3 */}
+            <div style={{ flex: '1 1 260px', maxWidth: 300, background: '#ffffff', borderRadius: 24, border: '6px solid #f1f5f9', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc', fontWeight: 700, fontSize: '0.9rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <PieChart size={16} color="#f59e0b" /> My Budget
+              </div>
+              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+                <div style={{ width: 100, height: 100, borderRadius: '50%', border: '16px solid #e2e8f0', borderTopColor: '#f59e0b', borderRightColor: '#6366f1', borderBottomColor: '#10b981' }} />
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600 }}><span style={{ color: '#f59e0b' }}>Grocery</span><span style={{ color: '#0f172a'}}>₹4,200</span></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600 }}><span style={{ color: '#6366f1' }}>Rent</span><span style={{ color: '#0f172a'}}>₹12,000</span></div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
@@ -371,9 +430,10 @@ export default function Auth() {
             <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#0f172a' }}>Room Split</span>
           </div>
           <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', color: '#475569' }}>
-            <span style={{ cursor: 'pointer', color: '#475569' }}>Features</span>
-            <span style={{ cursor: 'pointer', color: '#475569' }}>Privacy</span>
-            <span style={{ cursor: 'pointer', color: '#475569' }}>Contact</span>
+            <a href="#features" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>Features</a>
+            <span style={{ cursor: 'pointer', color: '#475569', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>Privacy</span>
+            <span style={{ cursor: 'pointer', color: '#475569', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>Terms</span>
+            <span style={{ cursor: 'pointer', color: '#475569', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>Contact</span>
           </div>
           <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
             Made with ❤️ in India
