@@ -27,38 +27,80 @@ const scanReceipt = async (req, res) => {
     const mimeType = match[1];
     const data = match[2];
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: [
-        {
-           inlineData: { data, mimeType }
-        },
-        "Extract all line items, their prices, the grand total, and the merchant name from this receipt. Ensure extreme accuracy for prices. If an item doesn't have a visible price, skip it. If you can't read the merchant name, output 'Unknown Merchant'."
-      ],
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            merchant: { type: Type.STRING, description: "Name of the store or merchant" },
-            total: { type: Type.NUMBER, description: "Grand total sum on the receipt" },
-            items: {
-              type: Type.ARRAY,
-              description: "List of items purchased",
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  name: { type: Type.STRING, description: "Name of the item" },
-                  price: { type: Type.NUMBER, description: "Total price for this line item" }
-                },
-                required: ["name", "price"]
-              }
-            }
+    let response;
+    try {
+      response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [
+          {
+             inlineData: { data, mimeType }
           },
-          required: ["merchant", "total", "items"]
+          "Extract all line items, their prices, the grand total, and the merchant name from this receipt. Ensure extreme accuracy for prices. If an item doesn't have a visible price, skip it. If you can't read the merchant name, output 'Unknown Merchant'."
+        ],
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              merchant: { type: Type.STRING, description: "Name of the store or merchant" },
+              total: { type: Type.NUMBER, description: "Grand total sum on the receipt" },
+              items: {
+                type: Type.ARRAY,
+                description: "List of items purchased",
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    name: { type: Type.STRING, description: "Name of the item" },
+                    price: { type: Type.NUMBER, description: "Total price for this line item" }
+                  },
+                  required: ["name", "price"]
+                }
+              }
+            },
+            required: ["merchant", "total", "items"]
+          }
         }
+      });
+    } catch (e) {
+      if (e.status === 503 || String(e.message).includes('503') || String(e.message).includes('UNAVAILABLE')) {
+        // Fallback to gemini-1.5-flash
+        console.warn('gemini-2.5-flash unavailable, falling back to gemini-1.5-flash');
+        response = await ai.models.generateContent({
+          model: 'gemini-1.5-flash',
+          contents: [
+            {
+               inlineData: { data, mimeType }
+            },
+            "Extract all line items, their prices, the grand total, and the merchant name from this receipt. Ensure extreme accuracy for prices. If an item doesn't have a visible price, skip it. If you can't read the merchant name, output 'Unknown Merchant'."
+          ],
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                merchant: { type: Type.STRING, description: "Name of the store or merchant" },
+                total: { type: Type.NUMBER, description: "Grand total sum on the receipt" },
+                items: {
+                  type: Type.ARRAY,
+                  description: "List of items purchased",
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      name: { type: Type.STRING, description: "Name of the item" },
+                      price: { type: Type.NUMBER, description: "Total price for this line item" }
+                    },
+                    required: ["name", "price"]
+                  }
+                }
+              },
+              required: ["merchant", "total", "items"]
+            }
+          }
+        });
+      } else {
+        throw e;
       }
-    });
+    }
 
     const parsedText = response.text || "{}";
     const receiptData = JSON.parse(parsedText);
@@ -69,7 +111,20 @@ const scanReceipt = async (req, res) => {
     });
   } catch (error) {
     console.error('Vision API Error:', error);
-    res.status(500).json({ success: false, message: error.message || 'Failed to analyze receipt image' });
+    
+    let errMsg = error.message || 'Failed to analyze receipt image';
+    if (typeof errMsg === 'string' && errMsg.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(errMsg);
+        if (parsed.error && parsed.error.message) {
+          errMsg = parsed.error.message;
+        }
+      } catch (e) {
+        // Ignore JSON parse error
+      }
+    }
+    
+    res.status(500).json({ success: false, message: errMsg });
   }
 };
 
