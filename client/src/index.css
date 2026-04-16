@@ -2,7 +2,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap');
 
-/* ── Design Tokens ── */
+/* ── Base Theme: Light (High Contrast Fintech) ── */
 :root {
   --primary: #6366f1;
   --primary-dark: #4f46e5;
@@ -13,13 +13,13 @@
   --warning: #f59e0b;
   --danger: #ef4444;
 
-  --bg-dark: #0a0a0f;
-  --bg-card: rgba(18, 18, 30, 0.85);
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #475569;
+  --bg-dark: #f8fafc;        /* High brightness background */
+  --bg-card: #ffffff;        /* Pure white cards */
+  --bg-glass: rgba(255, 255, 255, 0.95);
+  --border-glass: #e2e8f0;   /* Clean thin borders */
+  --text-primary: #0f172a;   /* Nearly black for great contrast */
+  --text-secondary: #334155; /* Slate gray for readability */
+  --text-muted: #64748b;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -28,14 +28,14 @@
   --radius-2xl: 24px;
 }
 
-[data-theme="light"] {
-  --bg-dark: #f8fafc;
-  --bg-card: rgba(255, 255, 255, 0.95);
-  --bg-glass: rgba(0, 0, 0, 0.03);
-  --border-glass: rgba(0, 0, 0, 0.08);
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
+[data-theme="dark"] {
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(18, 18, 30, 0.85);
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
 }
 
 /* ── Base Reset ── */
