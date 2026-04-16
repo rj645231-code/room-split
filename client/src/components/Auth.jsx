@@ -51,11 +51,11 @@ export default function Auth() {
       <div className="bg-mesh" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }} />
 
       {/* ── Navbar ── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '1rem', background: '#1E2937', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '1rem', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <Logo size={32} />
-            <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.25rem', color: '#ffffff' }}>Room Split</span>
+            <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.25rem', color: '#0f172a' }}>Room Split</span>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <button className="btn-ghost" onClick={handleTryDemo} style={{ display: window.innerWidth > 600 ? 'block' : 'none', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
@@ -345,16 +345,16 @@ export default function Auth() {
       </div>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.1)', padding: '2rem 0', background: '#1E2937' }}>
+      <footer style={{ borderTop: '1px solid rgba(0,0,0,0.05)', padding: '2rem 0', background: '#F8FAFC' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <Logo size={24} />
-            <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#ffffff' }}>Room Split</span>
+            <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#0f172a' }}>Room Split</span>
           </div>
-          <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', color: '#94a3b8' }}>
-            <span style={{ cursor: 'pointer', color: '#e2e8f0' }}>Features</span>
-            <span style={{ cursor: 'pointer', color: '#e2e8f0' }}>Privacy</span>
-            <span style={{ cursor: 'pointer', color: '#e2e8f0' }}>Contact</span>
+          <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', color: '#475569' }}>
+            <span style={{ cursor: 'pointer', color: '#475569' }}>Features</span>
+            <span style={{ cursor: 'pointer', color: '#475569' }}>Privacy</span>
+            <span style={{ cursor: 'pointer', color: '#475569' }}>Contact</span>
           </div>
           <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
             Made with ❤️ in India
