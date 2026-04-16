@@ -31,6 +31,12 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       if (!token) { setAuthLoading(false); return; }
+      if (token === 'demo-token') {
+        setCurrentUser(MOCK_DATA.users[0]);
+        setIsOfflineMode(true);
+        setAuthLoading(false);
+        return;
+      }
       try {
         const res = await getMe();
         setCurrentUser(res.data.data);
@@ -60,6 +66,14 @@ export const AppProvider = ({ children }) => {
     setCurrentUser(data);
   };
 
+  const startDemo = () => {
+    localStorage.setItem('rs-token', 'demo-token');
+    setToken('demo-token');
+    setCurrentUser(MOCK_DATA.users[0]);
+    setIsOfflineMode(true);
+    toast.success('Welcome to Demo Mode! 🎉');
+  };
+
   const logout = () => {
     localStorage.removeItem('rs-token');
     localStorage.removeItem('rs-active-group');
@@ -77,6 +91,8 @@ export const AppProvider = ({ children }) => {
     if (!currentUser) return;
     try {
       setLoading(true);
+      if (token === 'demo-token') throw new Error('demo mode');
+      
       const [groupsRes, usersRes] = await Promise.all([getGroups(), getUsers()]);
       const groupList = groupsRes.data.data || [];
       const userList  = usersRes.data.data  || [];
@@ -152,7 +168,7 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
-      currentUser, token, authLoading, login, register, logout, setCurrentUser,
+      currentUser, token, authLoading, login, register, logout, setCurrentUser, startDemo,
       groups, users,
       activeGroup, setActiveGroup: switchGroup,
       loading, fetchAll, refreshGroups,

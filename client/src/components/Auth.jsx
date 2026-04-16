@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import Logo from './Logo';
 
 export default function Auth() {
-  const { login, register, isOfflineMode } = useApp();
+  const { login, register, isOfflineMode, startDemo } = useApp();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading]  = useState(false);
   const [form, setForm] = useState({ name: '', username: '', email: '', password: '' });
@@ -18,9 +18,7 @@ export default function Auth() {
   };
 
   const handleTryDemo = () => {
-    // A quick fake action or just scroll to login if demo isn't natively supported yet
-    toast('Demo mode unlocking soon! Create a free account to test.', { icon: '🍿' });
-    scrollToAuth();
+    startDemo();
   };
 
   const handleSubmit = async (e) => {
