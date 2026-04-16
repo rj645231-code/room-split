@@ -62,9 +62,12 @@ const scanReceipt = async (req, res) => {
         }
       });
     } catch (e) {
-      if (e.status === 503 || String(e.message).includes('503') || String(e.message).includes('UNAVAILABLE')) {
+      const is503 = e.status === 503 || String(e.message).includes('503') || String(e.message).includes('UNAVAILABLE');
+      const is429 = e.status === 429 || String(e.message).includes('429') || String(e.message).includes('RESOURCE_EXHAUSTED') || String(e.message).includes('exceeded your current quota');
+      
+      if (is503 || is429) {
         // Fallback to gemini-2.5-flash-lite
-        console.warn('gemini-2.5-flash unavailable, falling back to gemini-2.5-flash-lite');
+        console.warn('gemini-2.5-flash unavailable or quota exceeded, falling back to gemini-2.5-flash-lite');
         response = await ai.models.generateContent({
           model: 'gemini-2.5-flash-lite',
           contents: [
