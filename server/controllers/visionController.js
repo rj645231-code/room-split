@@ -35,7 +35,7 @@ const scanReceipt = async (req, res) => {
           {
              inlineData: { data, mimeType }
           },
-          "Extract all line items, their prices, the grand total, and the merchant name from this receipt. Ensure extreme accuracy for prices. If an item doesn't have a visible price, skip it. If you can't read the merchant name, output 'Unknown Merchant'."
+          "You are an expert receipt extraction AI. Extract all line items, their individual prices, the grand total, and the merchant name from this receipt. Be extremely meticulous. If it is a blurry receipt, use context clues (like grocery items) to guess the items correctly. Do NOT skip items unless they are completely unreadable. Include taxes and fees as separate line items if visible. Make absolutely sure your response strictly matches the required JSON format and includes the 'items' array. If you cannot find any true items, attempt to extract the total as a single item. You must always return useful items."
         ],
         config: {
           responseMimeType: 'application/json',
@@ -71,7 +71,7 @@ const scanReceipt = async (req, res) => {
             {
                inlineData: { data, mimeType }
             },
-            "Extract all line items, their prices, the grand total, and the merchant name from this receipt. Ensure extreme accuracy for prices. If an item doesn't have a visible price, skip it. If you can't read the merchant name, output 'Unknown Merchant'."
+            "You are an expert receipt extraction AI. Extract all line items, their individual prices, the grand total, and the merchant name from this receipt. Be extremely meticulous. If it is a blurry receipt, use context clues (like grocery items) to guess the items correctly. Do NOT skip items unless they are completely unreadable. Include taxes and fees as separate line items if visible. Make absolutely sure your response strictly matches the required JSON format and includes the 'items' array. If you cannot find any true items, attempt to extract the total as a single item. You must always return useful items."
           ],
           config: {
             responseMimeType: 'application/json',
