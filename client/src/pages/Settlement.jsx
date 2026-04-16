@@ -315,15 +315,29 @@ export default function Settlement() {
                             <motion.button className="btn-ghost" whileTap={{ scale: 0.96 }}
                               onClick={() => handleMarkPaid({ ...s, fromUser, toUser })}
                               disabled={!!actioning || isOfflineMode}
-                              style={{ padding: '8px 20px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                              style={{ padding: '8px 16px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                               💸 Mark manually
                             </motion.button>
+                            
+                            <motion.a className="btn-primary" whileTap={{ scale: 0.96 }}
+                              href={`upi://pay?pa=demo@ybl&pn=${encodeURIComponent(toUser?.name || 'Roommate')}&am=${s.amount}&cu=INR&tn=RoomSplit`}
+                              style={{ padding: '8px 16px', fontSize: '0.8rem', background: '#10b981', borderColor: '#059669', textDecoration: 'none', color: '#fff', gap: '6px' }}
+                              onClick={(e) => {
+                                if (window.innerWidth > 768) {
+                                  e.preventDefault();
+                                  toast('Scan QR or open on phone to use UPI apps (GPay, PhonePe).', { icon: '📱' });
+                                }
+                                setTimeout(() => handleMarkPaid({ ...s, fromUser, toUser }), 2000);
+                              }}>
+                              <Smartphone size={14} /> Direct UPI
+                            </motion.a>
+
                             <motion.button className="btn-primary" whileTap={{ scale: 0.96 }}
                               onClick={() => handleRazorpay({ ...s, fromUser, toUser })}
                               disabled={!!actioning || isOfflineMode}
-                              style={{ padding: '8px 20px', fontSize: '0.8rem', background: '#3b82f6', borderColor: '#2563eb' }}>
+                              style={{ padding: '8px 16px', fontSize: '0.8rem', background: '#3b82f6', borderColor: '#2563eb' }}>
                               <Zap size={14} />
-                              {actioning === `rzp-${s.from}` ? 'Generating...' : isOfflineMode ? '🔒 Backend Required' : '⚡ Pay via Razorpay'}
+                              {actioning === `rzp-${s.from}` ? 'Generating...' : isOfflineMode ? '🔒 Backend Required' : 'Razorpay'}
                             </motion.button>
                           </>
                         ) : (
