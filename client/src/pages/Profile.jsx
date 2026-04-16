@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, User, Mail, Palette, Info } from 'lucide-react';
+import { Save, User, Mail, Palette, Info, Zap } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { updateProfile } from '../services/api';
 import TopBar from '../components/TopBar';
@@ -21,6 +21,7 @@ export default function Profile() {
     name: '',
     color: '#6366f1',
     avatar: '',
+    upiId: '',
     dietary: [],
     dislikes: '',
     allergies: '',
@@ -33,6 +34,7 @@ export default function Profile() {
         name: currentUser.name || '',
         color: currentUser.color || '#6366f1',
         avatar: currentUser.avatar || '',
+        upiId: currentUser.upiId || '',
         dietary: currentUser.dietary || [],
         dislikes: (currentUser.dislikes || []).join(', '),
         allergies: (currentUser.allergies || []).join(', '),
@@ -51,6 +53,7 @@ export default function Profile() {
         name: form.name,
         color: form.color,
         avatar: form.avatar,
+        upiId: form.upiId,
         dietary: form.dietary,
         dislikes: form.dislikes.split(',').map(s => s.trim()).filter(Boolean),
         allergies: form.allergies.split(',').map(s => s.trim()).filter(Boolean),
@@ -148,6 +151,22 @@ export default function Profile() {
               </div>
               <div style={{ marginTop: '8px', padding: '8px 12px', background: 'rgba(99,102,241,0.07)', borderRadius: 8, border: '1px solid rgba(99,102,241,0.2)', fontSize: '0.75rem', color: '#a5b4fc' }}>
                 💡 Useful if your stipend / salary / rent cycle starts mid-month (e.g. 25th)
+              </div>
+            </div>
+
+            <div className="divider" />
+
+            {/* Payment Info */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
+                <Zap size={16} color="#10b981" />
+                <div>
+                  <h3 style={{ fontFamily: 'Poppins', fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-primary)' }}>UPI Details</h3>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Save your UPI ID to let roommates send you money instantly</p>
+                </div>
+              </div>
+              <div style={{ position: 'relative', width: '100%', maxWidth: '350px' }}>
+                <input className="input-glass" placeholder="e.g. yourname@okhdfcbank" value={form.upiId} onChange={e => setForm(f => ({ ...f, upiId: e.target.value.toLowerCase().replace(/[^a-z0-9@.\-]/g, '') }))} style={{ paddingLeft: '1rem' }} />
               </div>
             </div>
 

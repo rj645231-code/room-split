@@ -9,6 +9,7 @@ const parseUser = (u) => {
     ...u,
     _id: u.id,
     username: u.username || null,
+    upiId: u.upi_id || '',
     dietary:   JSON.parse(u.dietary   || '[]'),
     dislikes:  JSON.parse(u.dislikes  || '[]'),
     allergies: JSON.parse(u.allergies || '[]'),

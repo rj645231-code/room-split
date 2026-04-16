@@ -42,23 +42,24 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const { name, email, color, avatar, preferences = {} } = req.body;
+    const { name, email, color, avatar, upiId, preferences = {} } = req.body;
     const existing = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
     if (!existing) return res.status(404).json({ success: false, message: 'User not found' });
 
     await db.prepare(`
       UPDATE users SET
         name      = ?, email     = ?, color    = ?,
-        avatar    = ?, dietary   = ?, dislikes = ?, allergies = ?
+        avatar    = ?, upi_id    = ?, dietary  = ?, dislikes = ?, allergies = ?
       WHERE id = ?
     `).run(
       name      || existing.name,
       email     || existing.email,
       color     || existing.color,
       avatar    || existing.avatar,
-      JSON.stringify(preferences.dietary   || JSON.parse(existing.dietary)),
-      JSON.stringify(preferences.dislikes  || JSON.parse(existing.dislikes)),
-      JSON.stringify(preferences.allergies || JSON.parse(existing.allergies)),
+      upiId !== undefined ? upiId : (existing.upi_id || ''),
+      JSON.stringify(preferences.dietary   || JSON.parse(existing.dietary || '[]')),
+      JSON.stringify(preferences.dislikes  || JSON.parse(existing.dislikes || '[]')),
+      JSON.stringify(preferences.allergies || JSON.parse(existing.allergies || '[]')),
       req.params.id,
     );
 

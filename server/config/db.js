@@ -30,12 +30,16 @@ async function initDB() {
         password   TEXT,
         avatar     TEXT DEFAULT '',
         color      TEXT DEFAULT '#6366f1',
+        upi_id     TEXT DEFAULT '',
         dietary    TEXT DEFAULT '[]',
         dislikes   TEXT DEFAULT '[]',
         allergies  TEXT DEFAULT '[]',
         created_at TEXT DEFAULT (datetime('now'))
       );
     `);
+    
+    // Auto-migrate: Add upi_id if it doesn't exist (fails silently if already exists)
+    try { await client.execute("ALTER TABLE users ADD COLUMN upi_id TEXT DEFAULT '';"); } catch(e) {}
     
     await client.execute(`
       CREATE TABLE IF NOT EXISTS groups_t (
