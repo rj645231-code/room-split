@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ArrowRight, Sparkles, RefreshCw, Info, Clock, XCircle, AlertCircle, Zap } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles, RefreshCw, Info, Clock, XCircle, AlertCircle, Zap, Smartphone } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import {
   getSuggestedSettlements, createSettlement, getSettlements,
