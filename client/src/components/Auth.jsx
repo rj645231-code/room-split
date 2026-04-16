@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, AtSign, ArrowRight, Zap, Calculator, PieChart, ShieldCheck, MessageSquare, Star, SplitSquareHorizontal, CheckCircle2, IndianRupee, Smartphone, Focus } from 'lucide-react';
+import { Mail, Lock, User, Users, AtSign, ArrowRight, Zap, Calculator, PieChart, ShieldCheck, MessageSquare, Star, SplitSquareHorizontal, CheckCircle2, IndianRupee, Smartphone, Focus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
 import Logo from './Logo';
