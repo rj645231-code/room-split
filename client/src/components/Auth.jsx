@@ -50,12 +50,12 @@ export default function Auth() {
     <div style={{ minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
       <div className="bg-mesh" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }} />
 
-      {/* ── Navbar ──────────────────────────────────────────────────────────── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '1rem', background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border-glass)' }}>
+      {/* ── Navbar ── */}
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, padding: '1rem', background: '#1E2937', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <Logo size={32} />
-            <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.25rem', color: 'var(--text-primary)' }}>Room Split</span>
+            <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.25rem', color: '#ffffff' }}>Room Split</span>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <button className="btn-ghost" onClick={handleTryDemo} style={{ display: window.innerWidth > 600 ? 'block' : 'none', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
@@ -101,7 +101,7 @@ export default function Auth() {
 
           {/* Right Visual Dashboard Mock */}
           <motion.div style={{ flex: '1 1 450px', position: 'relative', display: 'flex', justifyContent: 'center' }} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
-            <div className="card-glass" style={{ width: '100%', maxWidth: 500, padding: '1.5rem', position: 'relative', background: 'rgba(30,41,59,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <div className="card-glass" style={{ width: '100%', maxWidth: 500, padding: '1.5rem', position: 'relative', background: 'var(--bg-card)', border: '1px solid var(--border-glass)' }}>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
                 <div>
@@ -112,7 +112,7 @@ export default function Auth() {
               </div>
 
               {/* Mock Settlement Item */}
-              <div style={{ background: 'rgba(15,23,42,0.8)', padding: '14px', borderRadius: 14, marginBottom: '12px', border: '1px solid var(--border-glass)' }}>
+              <div style={{ background: 'var(--bg-glass)', padding: '14px', borderRadius: 14, marginBottom: '12px', border: '1px solid var(--border-glass)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
                     <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(239,68,68,0.2)', color: '#f87171', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><User size={20} /></div>
@@ -129,7 +129,7 @@ export default function Auth() {
               </div>
 
               {/* Mock Expense Item 1 */}
-              <div style={{ background: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: 12, marginBottom: '10px', border: '1px solid rgba(255,255,255,0.03)' }}>
+              <div style={{ background: 'var(--bg-glass)', padding: '12px', borderRadius: 12, marginBottom: '10px', border: '1px solid var(--border-glass)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                     <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(52,211,153,0.2)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Zap size={16} /></div>
@@ -143,7 +143,7 @@ export default function Auth() {
               </div>
 
               {/* Mock Expense Item 2 */}
-              <div style={{ background: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.03)' }}>
+              <div style={{ background: 'var(--bg-glass)', padding: '12px', borderRadius: 12, border: '1px solid var(--border-glass)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                     <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(245,158,11,0.2)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><SplitSquareHorizontal size={16} /></div>
@@ -226,9 +226,9 @@ export default function Auth() {
           </div>
         </section>
 
-        {/* ── How It Works ────────────────────────────────────────────────────── */}
+        {/* ── How It Works ── */}
         <section style={{ padding: '3rem 0' }}>
-          <div style={{ background: 'rgba(30,41,59,0.4)', borderRadius: 24, padding: '4rem 2rem', border: '1px solid var(--border-glass)' }}>
+          <div style={{ background: '#F8FAFC', borderRadius: 24, padding: '4rem 2rem', border: '1px solid var(--border-glass)' }}>
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
               <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '2rem', color: 'var(--text-primary)' }}>How it works</h2>
             </div>
@@ -273,19 +273,19 @@ export default function Auth() {
           </div>
         </section>
 
-        {/* ── CTA / Auth Form ────────────────────────────────────────────────── */}
+        {/* ── CTA / Auth Form ── */}
         <section id="auth-section" ref={authRef} style={{ padding: '4rem 0 6rem 0', display: 'flex', justifyContent: 'center' }}>
           <motion.div
             className="card-glass"
-            style={{ width: '100%', maxWidth: 450, padding: '2.5rem 2rem', position: 'relative', zIndex: 10, background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(99,102,241,0.3)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
+            style={{ width: '100%', maxWidth: 450, padding: '2.5rem 2rem', position: 'relative', zIndex: 10, background: '#1E2937', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)' }}
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
               <Logo size={42} />
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', marginTop: '1rem', color: 'var(--text-primary)' }}>
+              <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', marginTop: '1rem', color: '#ffffff' }}>
                 Ready to split?
               </h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center', marginTop: '0.5rem' }}>
+              <p style={{ color: '#94a3b8', fontSize: '0.85rem', textAlign: 'center', marginTop: '0.5rem' }}>
                 {isLogin ? 'Sign in to access your shared expenses.' : 'Create a free account and start tracking today.'}
               </p>
             </div>
@@ -305,26 +305,26 @@ export default function Auth() {
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     
                     <div style={{ position: 'relative' }}>
-                      <User size={18} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                      <input className="input-glass" placeholder="Full Name *" style={{ paddingLeft: '2.5rem' }} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+                      <User size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
+                      <input className="input-glass" placeholder="Full Name *" style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                     </div>
 
                     <div style={{ position: 'relative' }}>
-                      <AtSign size={18} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                      <input className="input-glass" placeholder="Username (optional)" style={{ paddingLeft: '2.5rem' }} value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))} />
+                      <AtSign size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
+                      <input className="input-glass" placeholder="Username (optional)" style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))} />
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               <div style={{ position: 'relative' }}>
-                <Mail size={18} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                <input className="input-glass" type="email" placeholder="Email address" required style={{ paddingLeft: '2.5rem' }} value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                <Mail size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
+                <input className="input-glass" type="email" placeholder="Email address" required style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
               </div>
 
               <div style={{ position: 'relative' }}>
-                <Lock size={18} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                <input className="input-glass" type="password" placeholder="Password" required style={{ paddingLeft: '2.5rem' }} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} />
+                <Lock size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
+                <input className="input-glass" type="password" placeholder="Password" required style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} />
               </div>
 
               <button className="btn-primary" type="submit" disabled={loading} style={{ width: '100%', justifyContent: 'center', padding: '0.875rem', marginTop: '0.5rem', fontSize: '0.95rem' }}>
@@ -344,19 +344,19 @@ export default function Auth() {
 
       </div>
 
-      {/* ── Footer ──────────────────────────────────────────────────────────── */}
-      <footer style={{ borderTop: '1px solid var(--border-glass)', padding: '2rem 0', background: 'rgba(15,23,42,0.8)' }}>
+      {/* ── Footer ── */}
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.1)', padding: '2rem 0', background: '#1E2937' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <Logo size={24} />
-            <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: 'var(--text-primary)' }}>Room Split</span>
+            <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#ffffff' }}>Room Split</span>
           </div>
-          <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            <span style={{ cursor: 'pointer' }}>Features</span>
-            <span style={{ cursor: 'pointer' }}>Privacy</span>
-            <span style={{ cursor: 'pointer' }}>Contact</span>
+          <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', color: '#94a3b8' }}>
+            <span style={{ cursor: 'pointer', color: '#e2e8f0' }}>Features</span>
+            <span style={{ cursor: 'pointer', color: '#e2e8f0' }}>Privacy</span>
+            <span style={{ cursor: 'pointer', color: '#e2e8f0' }}>Contact</span>
           </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
             Made with ❤️ in India
           </div>
         </div>
