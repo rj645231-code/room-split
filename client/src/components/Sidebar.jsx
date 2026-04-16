@@ -57,20 +57,6 @@ export default function Sidebar() {
               </div>
             </div>
 
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              title={theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
-              style={{
-                background: 'var(--bg-glass)', border: '1px solid var(--border-glass)',
-                borderRadius: 8, padding: '6px', cursor: 'pointer',
-                color: 'var(--text-secondary)', display: 'flex', alignItems: 'center',
-                transition: 'all 0.2s',
-              }}
-            >
-              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-            </button>
-
             {/* Mobile close */}
             <button
               onClick={() => setSidebarOpen(false)}

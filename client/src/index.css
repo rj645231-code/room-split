@@ -28,15 +28,7 @@
   --radius-2xl: 24px;
 }
 
-[data-theme="dark"] {
-  --bg-dark: #0a0a0f;
-  --bg-card: rgba(18, 18, 30, 0.85);
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #475569;
-}
+/* Dark mode removed to enforce light theme strictly */
 
 /* ── Base Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
