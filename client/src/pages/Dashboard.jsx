@@ -19,7 +19,7 @@ const CATEGORY_ICONS = {
 };
 
 export default function Dashboard() {
-  const { activeGroup, users, isOfflineMode } = useApp();
+  const { activeGroup, users, isOfflineMode, currentUser } = useApp();
   const [groupData, setGroupData] = useState(null);
   const [allExpenses, setAllExpenses] = useState([]);
   const [recentExpenses, setRecentExpenses] = useState([]);
@@ -66,7 +66,7 @@ export default function Dashboard() {
   useEffect(() => { fetchData(); }, [activeGroup?._id, isOfflineMode]);
 
   const totalSpent = groupData?.group?.totalSpent || 0;
-  const myBalance  = groupData?.balances?.[0];
+  const myBalance  = groupData?.balances?.find(b => b.userId === currentUser?._id || b.userId === currentUser?.id);
   const iOwe      = myBalance?.balance < 0 ? Math.abs(myBalance.balance) : 0;
   const iGetBack  = myBalance?.balance > 0 ? myBalance.balance : 0;
 
