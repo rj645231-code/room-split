@@ -73,7 +73,7 @@ export default function Sidebar() {
             <div style={{
               padding: '4px 10px', borderRadius: 8,
               background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)',
-              fontSize: '0.65rem', color: '#fbbf24', fontWeight: 600, letterSpacing: '0.3px',
+              fontSize: '0.65rem', color: '#ea580c', fontWeight: 600, letterSpacing: '0.3px',
               marginBottom: '0.75rem',
             }}>
               ⚡ DEMO MODE
@@ -155,7 +155,7 @@ export default function Sidebar() {
         {/* User Profile & Logout */}
         <div style={{ padding: '1rem 1.25rem', borderTop: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <NavLink to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }} onClick={() => setSidebarOpen(false)}>
-            <div className="avatar avatar-sm" style={{ background: 'rgba(99,102,241,0.2)', color: '#a5b4fc', fontSize: '0.7rem' }}>
+            <div className="avatar avatar-sm" style={{ background: 'rgba(99,102,241,0.2)', color: '#4f46e5', fontSize: '0.7rem' }}>
               👤
             </div>
             <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
