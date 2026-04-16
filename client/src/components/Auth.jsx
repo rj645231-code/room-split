@@ -277,15 +277,15 @@ export default function Auth() {
         <section id="auth-section" ref={authRef} style={{ padding: '4rem 0 6rem 0', display: 'flex', justifyContent: 'center' }}>
           <motion.div
             className="card-glass"
-            style={{ width: '100%', maxWidth: 450, padding: '2.5rem 2rem', position: 'relative', zIndex: 10, background: '#1E2937', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)' }}
+            style={{ width: '100%', maxWidth: 450, padding: '2.5rem 2rem', position: 'relative', zIndex: 10, background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.08)' }}
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
               <Logo size={42} />
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', marginTop: '1rem', color: '#ffffff' }}>
+              <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', marginTop: '1rem', color: '#0f172a' }}>
                 Ready to split?
               </h2>
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', textAlign: 'center', marginTop: '0.5rem' }}>
+              <p style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', marginTop: '0.5rem' }}>
                 {isLogin ? 'Sign in to access your shared expenses.' : 'Create a free account and start tracking today.'}
               </p>
             </div>
@@ -306,12 +306,12 @@ export default function Auth() {
                     
                     <div style={{ position: 'relative' }}>
                       <User size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                      <input className="input-glass" placeholder="Full Name *" style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+                      <input className="input-glass" placeholder="Full Name *" style={{ paddingLeft: '2.5rem', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                     </div>
 
                     <div style={{ position: 'relative' }}>
                       <AtSign size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                      <input className="input-glass" placeholder="Username (optional)" style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))} />
+                      <input className="input-glass" placeholder="Username (optional)" style={{ paddingLeft: '2.5rem', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }} value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))} />
                     </div>
                   </motion.div>
                 )}
@@ -319,12 +319,12 @@ export default function Auth() {
 
               <div style={{ position: 'relative' }}>
                 <Mail size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                <input className="input-glass" type="email" placeholder="Email address" required style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                <input className="input-glass" type="email" placeholder="Email address" required style={{ paddingLeft: '2.5rem', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }} value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
               </div>
 
               <div style={{ position: 'relative' }}>
                 <Lock size={18} color="#94a3b8" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                <input className="input-glass" type="password" placeholder="Password" required style={{ paddingLeft: '2.5rem', background: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)' }} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} />
+                <input className="input-glass" type="password" placeholder="Password" required style={{ paddingLeft: '2.5rem', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} />
               </div>
 
               <button className="btn-primary" type="submit" disabled={loading} style={{ width: '100%', justifyContent: 'center', padding: '0.875rem', marginTop: '0.5rem', fontSize: '0.95rem' }}>
@@ -333,9 +333,9 @@ export default function Auth() {
               </button>
             </form>
 
-            <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: '#475569' }}>
               {isLogin ? "Don't have an account? " : 'Already have an account? '}
-              <button type="button" onClick={() => { setIsLogin(!isLogin); setForm({ name: '', username: '', email: '', password: '' }); }} style={{ background: 'none', border: 'none', color: '#818cf8', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
+              <button type="button" onClick={() => { setIsLogin(!isLogin); setForm({ name: '', username: '', email: '', password: '' }); }} style={{ background: 'none', border: 'none', color: '#6366f1', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
                 {isLogin ? 'Sign up' : 'Sign in'}
               </button>
             </div>
