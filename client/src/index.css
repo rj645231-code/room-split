@@ -50,6 +50,9 @@ body {
 ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.6); }
 
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ── Background Mesh ── */
 .bg-mesh {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;

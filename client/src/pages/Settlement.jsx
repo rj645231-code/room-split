@@ -230,10 +230,10 @@ export default function Settlement() {
       )}
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.04)', padding: '4px', borderRadius: 12, width: 'fit-content' }}>
+      <div className="hide-scrollbar" style={{ display: 'flex', gap: '4px', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.04)', padding: '4px', borderRadius: 12, width: 'fit-content', overflowX: 'auto', WebkitOverflowScrolling: 'touch', maxWidth: '100%' }}>
         {[['suggested', '✨ Suggested'], ['history', '📜 History']].map(([t, label]) => (
           <button key={t} onClick={() => setTab(t)}
-            style={{ padding: '8px 20px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', transition: 'all 0.2s',
+            style={{ flexShrink: 0, whiteSpace: 'nowrap', padding: '8px 20px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', transition: 'all 0.2s',
               background: tab === t ? 'rgba(99,102,241,0.2)' : 'transparent',
               color: tab === t ? '#a5b4fc' : 'var(--text-muted)' }}>
             {label}
@@ -246,17 +246,17 @@ export default function Settlement() {
         {tab === 'suggested' && (
           <motion.div key="suggested" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             {/* Sub Tabs for Regular vs Recurring */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.5rem' }}>
+            <div className="hide-scrollbar" style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               <button 
                 className={`chip ${subTab === 'regular' ? 'selected' : ''}`} 
-                style={{ borderRadius: 8, padding: '8px 16px', background: subTab === 'regular' ? 'var(--text-primary)' : 'transparent', color: subTab === 'regular' ? '#ffffff' : 'var(--text-secondary)' }}
+                style={{ flexShrink: 0, whiteSpace: 'nowrap', borderRadius: 8, padding: '8px 16px', background: subTab === 'regular' ? 'var(--text-primary)' : 'transparent', color: subTab === 'regular' ? '#ffffff' : 'var(--text-secondary)' }}
                 onClick={() => setSubTab('regular')}
               >
                 Regular Bills
               </button>
               <button 
                 className={`chip ${subTab === 'recurring' ? 'selected' : ''}`} 
-                style={{ borderRadius: 8, padding: '8px 16px', background: subTab === 'recurring' ? 'var(--text-primary)' : 'transparent', color: subTab === 'recurring' ? '#ffffff' : 'var(--text-secondary)' }}
+                style={{ flexShrink: 0, whiteSpace: 'nowrap', borderRadius: 8, padding: '8px 16px', background: subTab === 'recurring' ? 'var(--text-primary)' : 'transparent', color: subTab === 'recurring' ? '#ffffff' : 'var(--text-secondary)' }}
                 onClick={() => setSubTab('recurring')}
               >
                 Monthly / Daily Items
