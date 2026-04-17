@@ -61,6 +61,10 @@ export const getStats            = (groupId) => api.get(`/expenses/stats?groupId
 export const scanReceipt         = (imageBase64) => api.post('/vision/receipt', { imageBase64 });
 export const getPersonalAnalytics = () => api.get('/analytics/personal');
 
+export const getRecurringItems    = (groupId) => api.get(`/recurring-items?groupId=${groupId}`);
+export const createRecurringItem  = (data)    => api.post('/recurring-items', data);
+export const deleteRecurringItem  = (id)      => api.delete(`/recurring-items/${id}`);
+
 // ── Settlements ───────────────────────────────────────────────────────────────
 export const getSettlements        = (groupId, status) =>
   api.get(`/settlements?groupId=${groupId}${status ? `&status=${status}` : ''}`);

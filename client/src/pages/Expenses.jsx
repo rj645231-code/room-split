@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Search, Lock } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { getExpenses, deleteExpense } from '../services/api';
+import { getExpenses, deleteExpense, getRecurringItems, createExpense } from '../services/api';
 import { MOCK_DATA } from '../services/mockData';
 import TopBar from '../components/TopBar';
 import AddExpenseModal from '../components/AddExpenseModal';
+import AddRecurringItemModal from '../components/AddRecurringItemModal';
 import toast from 'react-hot-toast';
 
 const CATEGORY_META = {
@@ -20,8 +21,11 @@ const CATEGORY_META = {
 export default function Expenses() {
   const { activeGroup, currentUser, isAdmin, isOfflineMode } = useApp();
   const [expenses, setExpenses] = useState([]);
+  const [recurringItems, setRecurringItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [recurringModalOpen, setRecurringModalOpen] = useState(false);
+  const [recurringSaves, setRecurringSaves] = useState({});
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('all');
   const [expanded, setExpanded] = useState(null);
@@ -31,16 +35,60 @@ export default function Expenses() {
     try {
       if (isOfflineMode) {
         setExpenses(MOCK_DATA.expenses);
+        setRecurringItems([]);
       } else {
         if (!activeGroup?._id) return;
-        const res = await getExpenses(activeGroup._id);
+        const [res, recRes] = await Promise.all([
+          getExpenses(activeGroup._id),
+          getRecurringItems(activeGroup._id).catch(() => ({ data: { data: [] } }))
+        ]);
         setExpenses(res.data.data || []);
+        
+        const recList = recRes.data?.data || [];
+        setRecurringItems(recList);
+        
+        const saves = {};
+        recList.forEach(r => saves[r._id] = r.defaultConsumers);
+        setRecurringSaves(saves);
       }
     } catch { setExpenses(MOCK_DATA.expenses); }
     finally { setLoading(false); }
   };
 
   useEffect(() => { fetchExpenses(); }, [activeGroup?._id, isOfflineMode]);
+
+  const todayPrefix = new Date().toISOString().split('T')[0];
+  const dueRecurringItems = recurringItems.filter(item => {
+    const alreadyLogged = expenses.some(e => e.recurring_item_id === item._id && e.date?.startsWith(todayPrefix));
+    return !alreadyLogged;
+  });
+
+  const handleSaveRecurring = async (item) => {
+    if (isOfflineMode) return toast.error('Connect backend to save recurring items');
+    const consumers = recurringSaves[item._id] || item.defaultConsumers;
+    if (!consumers.length) return toast.error('Select at least one consumer');
+    const title = `${item.title} - ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
+    try {
+      await createExpense({
+        group: activeGroup._id,
+        paidBy: currentUser._id,
+        title,
+        category: item.category,
+        totalAmount: item.amount,
+        recurringItemId: item._id,
+        items: [{
+          name: item.title,
+          totalCost: item.amount,
+          consumers,
+          category: item.category
+        }]
+      });
+      toast.success(`${item.title} added!`);
+      fetchExpenses();
+    } catch {
+      toast.error('Failed to add recurring item');
+    }
+  };
 
   const filtered = expenses.filter(e => {
     const matchSearch = e.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -65,9 +113,14 @@ export default function Expenses() {
         title="Expenses"
         subtitle={`${filtered.length} expense${filtered.length !== 1 ? 's' : ''}`}
         actions={
-          <button className="btn-primary" onClick={() => setModalOpen(true)}>
-            <Plus size={15} /> Add
-          </button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            <button className="btn-ghost" onClick={() => setRecurringModalOpen(true)} style={{ padding: '6px 12px', fontSize: '0.8rem' }}>
+              <Plus size={14} /> Add Recurring
+            </button>
+            <button className="btn-primary" onClick={() => setModalOpen(true)}>
+              <Plus size={15} /> Add
+            </button>
+          </div>
         }
       />
 
@@ -88,6 +141,54 @@ export default function Expenses() {
           ))}
         </div>
       </div>
+
+      {dueRecurringItems.length > 0 && !loading && search === '' && filterCat === 'all' && (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Today's Recurring Items
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {dueRecurringItems.map(item => {
+              const meta = CATEGORY_META[item.category] || CATEGORY_META.other;
+              const selectedConsumers = recurringSaves[item._id] || [];
+              return (
+                <div key={item._id} style={{ background: 'var(--bg-glass)', border: '1px solid var(--border-glass)', borderRadius: 16, padding: '1rem', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: meta.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
+                    {meta.icon}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 150 }}>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.title}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>₹{item.amount.toFixed(2)}</div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', flex: 2, minWidth: 200, alignItems: 'center' }}>
+                    {activeGroup?.members?.map(m => {
+                      const isSelected = selectedConsumers.includes(m._id);
+                      return (
+                        <div key={m._id} onClick={() => {
+                          setRecurringSaves(prev => {
+                            const arr = prev[item._id] || [];
+                            return { ...prev, [item._id]: isSelected ? arr.filter(id => id !== m._id) : [...arr, m._id] };
+                          });
+                        }} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: '4px 10px', borderRadius: 99, border: `1px solid ${isSelected ? m.color : 'var(--border-glass)'}`, background: isSelected ? m.color + '22' : 'transparent', opacity: isSelected ? 1 : 0.6 }}>
+                          <div style={{ width: 14, height: 14, borderRadius: 4, border: `1px solid ${isSelected ? m.color : 'var(--text-muted)'}`, background: isSelected ? m.color : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {isSelected && <svg viewBox="0 0 14 14" fill="none" style={{ width: 10, height: 10 }}><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="var(--bg-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                          </div>
+                          <span style={{ fontSize: '0.75rem', color: isSelected ? m.color : 'var(--text-muted)', fontWeight: isSelected ? 600 : 400 }}>{m.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <button className="btn-primary" style={{ padding: '8px 16px', fontSize: '0.8rem', borderRadius: 10 }} onClick={() => handleSaveRecurring(item)}>
+                    Save
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -227,6 +328,7 @@ export default function Expenses() {
 
       <motion.button className="fab" onClick={() => setModalOpen(true)} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>+</motion.button>
       <AddExpenseModal open={modalOpen} onClose={() => setModalOpen(false)} onSuccess={fetchExpenses} />
+      <AddRecurringItemModal open={recurringModalOpen} onClose={() => setRecurringModalOpen(false)} onSuccess={fetchExpenses} />
     </div>
   );
 }

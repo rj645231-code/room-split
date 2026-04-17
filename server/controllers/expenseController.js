@@ -80,7 +80,7 @@ exports.getStats = async (req, res) => {
 
 exports.createExpense = async (req, res) => {
   try {
-    const { group, paidBy, title, description = '', category = 'grocery', totalAmount, items = [] } = req.body;
+    const { group, paidBy, title, description = '', category = 'grocery', totalAmount, items = [], recurringItemId = null } = req.body;
     if (!group || !paidBy || !items.length) {
       return res.status(400).json({ success: false, message: 'group, paidBy and items are required' });
     }
@@ -90,11 +90,11 @@ exports.createExpense = async (req, res) => {
     const createdBy = req.user.id;
 
     await db.prepare(`
-      INSERT INTO expenses (id, group_id, paid_by, created_by, title, description, total_amount, category, date)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO expenses (id, group_id, paid_by, created_by, title, description, total_amount, category, date, recurring_item_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(expId, group, paidBy, createdBy, title || items[0]?.name || 'Expense',
         description, computedTotal, category,
-        new Date().toISOString());
+        new Date().toISOString(), recurringItemId);
 
     for (const item of items) {
       const itemId = newId();
