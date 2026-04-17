@@ -131,9 +131,16 @@ export default function DailyItems() {
                         </div>
                       </div>
                       
-                      <button className="btn-ghost" style={{ padding: '6px' }} onClick={() => setSummaryModal(item)}>
-                        <ChevronRight size={18} color="var(--text-muted)" />
-                      </button>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        {(!isOfflineMode && (isAdmin || item.created_by === currentUser?._id)) && (
+                          <button className="btn-ghost" style={{ padding: '6px' }} onClick={(e) => { e.stopPropagation(); handleDeleteItem(item._id); }}>
+                            <Trash2 size={16} color="#f87171" />
+                          </button>
+                        )}
+                        <button className="btn-ghost" style={{ padding: '6px' }} onClick={() => setSummaryModal(item)}>
+                          <ChevronRight size={18} color="var(--text-muted)" />
+                        </button>
+                      </div>
                     </div>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '1rem' }}>
@@ -154,7 +161,7 @@ export default function DailyItems() {
                       style={{ width: '100%', justifyContent: 'center', height: '36px', background: loggedToday ? 'transparent' : 'var(--bg-accent)', border: loggedToday ? '1px solid #10b981' : 'none', color: loggedToday ? '#10b981' : '#fff' }} 
                       onClick={() => handleSaveDaily(item._id)}
                     >
-                      {loggedToday ? '✓ Updated Today' : 'Save Today'}
+                      {loggedToday ? "✓ Update Today's Log" : 'Save Today'}
                     </button>
                   </div>
                 );
