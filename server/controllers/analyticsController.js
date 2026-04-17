@@ -25,6 +25,7 @@ function getBudgetCycleDates(startDay) {
 exports.getPersonalAnalytics = async (req, res) => {
   try {
     const userId = req.user.id;
+    const filterType = req.query.type || 'all'; // all, group, personal
     const userRow = await db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
     if (!userRow) return res.status(404).json({ success: false, message: 'User not found' });
 
@@ -68,12 +69,28 @@ exports.getPersonalAnalytics = async (req, res) => {
       ORDER BY e.date ASC
     `).all(userId, userId);
 
-    // Merge both into unified consumption records
-    const allConsumption = [...othersExpenseSplits, ...selfPaidConsumption];
+    // C) Personal standalone expenses
+    const personalExpenses = await db.prepare(`
+      SELECT amount, category, date, title, user_id as paid_by, id as expense_id
+      FROM personal_expenses
+      WHERE user_id = ?
+      ORDER BY date ASC
+    `).all(userId);
 
-    // Filter by cycle
-    const currentConsumption = allConsumption.filter(s => s.date >= csISO && s.date <= ceISO);
-    const prevConsumption    = allConsumption.filter(s => s.date >= psISO && s.date <= peISO);
+    // Merge both into unified consumption records
+    const allConsumption = [
+      ...othersExpenseSplits.map(s => ({ ...s, type: 'group' })),
+      ...selfPaidConsumption.map(s => ({ ...s, type: 'group' })),
+      ...personalExpenses.map(s => ({ ...s, type: 'personal' }))
+    ];
+
+    // Filter by cycle and type
+    const currentConsumption = allConsumption.filter(s =>
+      s.date >= csISO && s.date <= ceISO && (filterType === 'all' || s.type === filterType)
+    );
+    const prevConsumption    = allConsumption.filter(s =>
+      s.date >= psISO && s.date <= peISO && (filterType === 'all' || s.type === filterType)
+    );
 
     // ── Totals ───────────────────────────────────────────────────────────────
     const totalThisCycle = currentConsumption.reduce((sum, s) => sum + (s.amount || 0), 0);
@@ -136,10 +153,10 @@ exports.getPersonalAnalytics = async (req, res) => {
     }
 
     // ── Group vs Personal ────────────────────────────────────────────────────
-    const fromOthers  = currentConsumption.filter(s => s.paid_by !== userId).reduce((s, x) => s + x.amount, 0);
-    const fromSelf    = currentConsumption.filter(s => s.paid_by === userId).reduce((s, x) => s + x.amount, 0);
-    const grandTotal  = fromOthers + fromSelf;
-    const groupPct    = grandTotal > 0 ? Math.round((fromOthers / grandTotal) * 100) : 50;
+    const groupTotal    = currentConsumption.filter(s => s.type === 'group').reduce((s, x) => s + x.amount, 0);
+    const personalTotal = currentConsumption.filter(s => s.type === 'personal').reduce((s, x) => s + x.amount, 0);
+    const grandTotal    = groupTotal + personalTotal;
+    const groupPct      = grandTotal > 0 ? Math.round((groupTotal / grandTotal) * 100) : (groupTotal > 0 ? 100 : 0);
 
     res.json({
       success: true,

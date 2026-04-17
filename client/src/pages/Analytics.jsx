@@ -43,12 +43,13 @@ export default function Analytics() {
   const { currentUser, isOfflineMode } = useApp();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [typeFilter, setTypeFilter] = useState('all');
 
-  const fetchData = async () => {
+  const fetchData = async (currentType = typeFilter) => {
     if (isOfflineMode) { setLoading(false); return; }
     setLoading(true);
     try {
-      const res = await getPersonalAnalytics();
+      const res = await getPersonalAnalytics(currentType);
       setData(res.data.data);
     } catch (e) {
       toast.error('Failed to load analytics');
@@ -57,7 +58,7 @@ export default function Analytics() {
     }
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(typeFilter); }, [typeFilter]);
 
   const exportPDF = () => {
     if (!data) return;
@@ -158,9 +159,14 @@ export default function Analytics() {
         title="My Budget"
         subtitle={`${fmtDate(data.cycleStart)} — ${fmtDate(data.cycleEnd)}`}
         actions={
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn-ghost" onClick={fetchData}><RefreshCw size={14} /> Refresh</button>
-            <button className="btn-ghost" onClick={exportPDF}><Download size={14} /> PDF</button>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <select className="input-glass" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} style={{ padding: '0.4rem 2rem 0.4rem 1rem', fontSize: '0.8rem', minHeight: '34px', width: 'auto' }}>
+              <option value="all">All Expenses</option>
+              <option value="group">Group Only</option>
+              <option value="personal">Personal Only</option>
+            </select>
+            <button className="btn-ghost" onClick={() => fetchData(typeFilter)} style={{ padding: '0.4rem 0.75rem' }}><RefreshCw size={14} /> <span className="hidden sm:inline">Refresh</span></button>
+            <button className="btn-ghost" onClick={exportPDF} style={{ padding: '0.4rem 0.75rem' }}><Download size={14} /> <span className="hidden sm:inline">PDF</span></button>
           </div>
         }
       />
