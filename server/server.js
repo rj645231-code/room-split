@@ -36,7 +36,8 @@ app.use('/api/settlements',   require('./routes/settlements'));
 app.use('/api/join-requests', require('./routes/joinRequests'));
 app.use('/api/vision',        require('./routes/vision'));
 app.use('/api/analytics',     require('./routes/analytics'));
-app.use('/api/recurring-items', require('./routes/recurringItems'));
+app.use('/api/recurring-items',    require('./routes/recurringItems'));
+app.use('/api/personal-expenses',  require('./routes/personalExpenses'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', db: 'SQLite', timestamp: new Date().toISOString() });

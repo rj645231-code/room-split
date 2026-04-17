@@ -11,6 +11,7 @@ import Members from './pages/Members';
 import Profile from './pages/Profile';
 import Analytics from './pages/Analytics';
 import DailyItems from './pages/DailyItems';
+import PersonalExpenses from './pages/PersonalExpenses';
 import Auth from './components/Auth';
 
 const pageVariants = {
@@ -33,6 +34,7 @@ function AnimatedRoutes() {
           <Route path="/members"      element={<Members />}     />
           <Route path="/profile"      element={<Profile />}     />
           <Route path="/analytics"    element={<Analytics />}   />
+          <Route path="/personal"     element={<PersonalExpenses />} />
           <Route path="*"             element={<Navigate to="/" />} />
         </Routes>
       </motion.div>

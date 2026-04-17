@@ -160,6 +160,19 @@ async function initDB() {
       );
     `);
 
+    await client.execute(`
+      CREATE TABLE IF NOT EXISTS personal_expenses (
+        id          TEXT PRIMARY KEY,
+        user_id     TEXT NOT NULL,
+        title       TEXT NOT NULL,
+        amount      REAL NOT NULL,
+        category    TEXT DEFAULT 'other',
+        date        TEXT DEFAULT (datetime('now')),
+        note        TEXT DEFAULT '',
+        created_at  TEXT DEFAULT (datetime('now'))
+      );
+    `);
+
     // safeAlter equivalents
     const safeAlter = async (sql) => {
       try { await client.execute(sql); } catch (_) {}

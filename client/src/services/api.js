@@ -61,6 +61,12 @@ export const getStats            = (groupId) => api.get(`/expenses/stats?groupId
 export const scanReceipt         = (imageBase64) => api.post('/vision/receipt', { imageBase64 });
 export const getPersonalAnalytics = () => api.get('/analytics/personal');
 
+export const getPersonalExpenses        = (month) => api.get(`/personal-expenses${month ? `?month=${month}` : ''}`);
+export const getPersonalExpensesSummary = ()       => api.get('/personal-expenses/summary');
+export const createPersonalExpense      = (data)   => api.post('/personal-expenses', data);
+export const updatePersonalExpense      = (id, data) => api.put(`/personal-expenses/${id}`, data);
+export const deletePersonalExpense      = (id)     => api.delete(`/personal-expenses/${id}`);
+
 export const getRecurringItems    = (groupId) => api.get(`/recurring-items?groupId=${groupId}`);
 export const createRecurringItem  = (data)    => api.post('/recurring-items', data);
 export const deleteRecurringItem  = (id)      => api.delete(`/recurring-items/${id}`);
