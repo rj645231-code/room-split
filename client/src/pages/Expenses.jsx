@@ -147,14 +147,14 @@ export default function Expenses() {
       <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.5rem' }}>
         <button 
           className={`chip ${activeTab === 'all' ? 'selected' : ''}`} 
-          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'all' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'all' ? 'var(--bg-default)' : 'var(--text-secondary)' }}
+          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'all' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'all' ? '#ffffff' : 'var(--text-secondary)' }}
           onClick={() => setActiveTab('all')}
         >
           Regular Expenses
         </button>
         <button 
           className={`chip ${activeTab === 'recurring' ? 'selected' : ''}`} 
-          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'recurring' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'recurring' ? 'var(--bg-default)' : 'var(--text-secondary)' }}
+          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'recurring' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'recurring' ? '#ffffff' : 'var(--text-secondary)' }}
           onClick={() => setActiveTab('recurring')}
         >
           Recurring / Monthly Bills

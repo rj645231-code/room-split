@@ -19,11 +19,14 @@ const STATUS_CONFIG = {
 
 export default function Settlement() {
   const { activeGroup, currentUser, isOfflineMode } = useApp();
-  const [suggested, setSuggested] = useState([]);
-  const [balances, setBalances]   = useState([]);
+  const [regularSuggested, setRegularSuggested] = useState([]);
+  const [regularBalances, setRegularBalances]   = useState([]);
+  const [recurringSuggested, setRecurringSuggested] = useState([]);
+  const [recurringBalances, setRecurringBalances]   = useState([]);
   const [history, setHistory]     = useState([]);
   const [loading, setLoading]     = useState(true);
   const [tab, setTab]             = useState('suggested');
+  const [subTab, setSubTab]       = useState('regular'); // 'regular' or 'recurring'
   const [actioning, setActioning] = useState(null);
 
   // Settlements where the current user is the receiver and confirmation is needed
@@ -35,8 +38,10 @@ export default function Settlement() {
     setLoading(true);
     try {
       if (isOfflineMode) {
-        setSuggested(MOCK_DATA.settlements);
-        setBalances(MOCK_DATA.balances);
+        setRegularSuggested(MOCK_DATA.settlements);
+        setRegularBalances(MOCK_DATA.balances);
+        setRecurringSuggested([]);
+        setRecurringBalances([]);
         setHistory([]);
       } else {
         if (!activeGroup?._id) return;
@@ -44,13 +49,18 @@ export default function Settlement() {
           getSuggestedSettlements(activeGroup._id),
           getSettlements(activeGroup._id),
         ]);
-        setSuggested(sugRes.data.data?.settlements || []);
-        setBalances(sugRes.data.data?.balances || []);
+        const dat = sugRes.data.data;
+        setRegularSuggested(dat?.regularSettlements || []);
+        setRegularBalances(dat?.regularBalances || []);
+        setRecurringSuggested(dat?.recurringSettlements || []);
+        setRecurringBalances(dat?.recurringBalances || []);
         setHistory(histRes.data.data || []);
       }
     } catch {
-      setSuggested(MOCK_DATA.settlements);
-      setBalances(MOCK_DATA.balances);
+      setRegularSuggested(MOCK_DATA.settlements);
+      setRegularBalances(MOCK_DATA.balances);
+      setRecurringSuggested([]);
+      setRecurringBalances([]);
     } finally { setLoading(false); }
   };
 
@@ -67,6 +77,7 @@ export default function Settlement() {
         group: activeGroup._id,
         from: s.fromUser._id, to: s.toUser._id,
         amount: s.amount, note: 'Marked as paid via Room Split',
+        type: subTab
       });
       toast.success('💸 Payment marked! Waiting for receiver to confirm.');
       setTab('history');
@@ -108,7 +119,8 @@ export default function Settlement() {
         from: s.fromUser._id, 
         to: s.toUser._id,
         amount: s.amount, 
-        note: 'Razorpay UPI link generated',
+        note: `Razorpay UPI link generated - ${subTab}`,
+        type: subTab
       });
       if (res.data.url) {
         window.open(res.data.url, '_blank');
@@ -134,7 +146,9 @@ export default function Settlement() {
     finally { setActioning(null); }
   };
 
-  const allSettled = suggested.length === 0;
+  const activeSuggested = subTab === 'regular' ? regularSuggested : recurringSuggested;
+  const activeBalances  = subTab === 'regular' ? regularBalances : recurringBalances;
+  const allSettled = activeSuggested.length === 0;
 
   return (
     <div>
@@ -179,7 +193,7 @@ export default function Settlement() {
       </AnimatePresence>
 
       {/* Balance overview */}
-      {balances.length > 0 && (
+      {activeBalances.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
           className="card-glass" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
@@ -187,7 +201,7 @@ export default function Settlement() {
             <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Net Balances</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '8px' }}>
-            {balances.map(b => {
+            {activeBalances.map(b => {
               const member = (activeGroup?.members || []).find(m => m._id === b.userId);
               return (
                 <div key={b.userId} style={{
@@ -231,6 +245,24 @@ export default function Settlement() {
         {/* ── Suggested Tab ─────────────────────────────────────────────────── */}
         {tab === 'suggested' && (
           <motion.div key="suggested" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            {/* Sub Tabs for Regular vs Recurring */}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.5rem' }}>
+              <button 
+                className={`chip ${subTab === 'regular' ? 'selected' : ''}`} 
+                style={{ borderRadius: 8, padding: '8px 16px', background: subTab === 'regular' ? 'var(--text-primary)' : 'transparent', color: subTab === 'regular' ? '#ffffff' : 'var(--text-secondary)' }}
+                onClick={() => setSubTab('regular')}
+              >
+                Regular Bills
+              </button>
+              <button 
+                className={`chip ${subTab === 'recurring' ? 'selected' : ''}`} 
+                style={{ borderRadius: 8, padding: '8px 16px', background: subTab === 'recurring' ? 'var(--text-primary)' : 'transparent', color: subTab === 'recurring' ? '#ffffff' : 'var(--text-secondary)' }}
+                onClick={() => setSubTab('recurring')}
+              >
+                Monthly / Daily Items
+              </button>
+            </div>
+            
             {loading ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {[1,2,3].map(i => <div key={i} className="shimmer" style={{ height: 110, borderRadius: 20 }} />)}
@@ -261,11 +293,11 @@ export default function Settlement() {
                   background: 'rgba(245,158,11,0.08)', borderRadius: 10, border: '1px solid rgba(245,158,11,0.2)' }}>
                   <Sparkles size={14} color="#fbbf24" />
                   <span style={{ fontSize: '0.8rem', color: '#fbbf24', fontWeight: 500 }}>
-                    Optimized: {suggested.length} payment{suggested.length !== 1 ? 's' : ''} to settle all debts
+                    Optimized: {activeSuggested.length} payment{activeSuggested.length !== 1 ? 's' : ''} to settle {subTab === 'regular' ? 'regular items' : 'monthly/daily items'}
                   </span>
                 </div>
 
-                {suggested.map((s, idx) => {
+                {activeSuggested.map((s, idx) => {
                   const fromUser = (activeGroup?.members || []).find(m => m._id === s.from) || s.fromUser;
                   const toUser   = (activeGroup?.members || []).find(m => m._id === s.to)   || s.toUser;
                   const isMyPayment = fromUser?._id === currentUser?._id;

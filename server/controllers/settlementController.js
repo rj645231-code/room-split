@@ -31,21 +31,30 @@ exports.getSuggestedSettlements = async (req, res) => {
     `).all(groupId);
     const members = memberRows.map(parseUser);
 
-    const { balances, settlements } = await computeGroupBalances(groupId, members);
+    const { balances, settlements } = await computeGroupBalances(groupId, members, 'all');
+    const { balances: regularBalances, settlements: regularSettlements } = await computeGroupBalances(groupId, members, 'regular');
+    const { balances: recurringBalances, settlements: recurringSettlements } = await computeGroupBalances(groupId, members, 'recurring');
 
-    const enriched = settlements.map(s => {
+    const enrich = (settlementsArr) => settlementsArr.map(s => {
       const fromUser = members.find(m => m._id === s.from);
       const toUser   = members.find(m => m._id === s.to);
       return { ...s, fromUser, toUser };
     });
 
-    res.json({ success: true, data: { settlements: enriched, balances } });
+    res.json({ 
+      success: true, 
+      data: { 
+        settlements: enrich(settlements), balances,
+        regularSettlements: enrich(regularSettlements), regularBalances,
+        recurringSettlements: enrich(recurringSettlements), recurringBalances
+      } 
+    });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 };
 
 exports.createSettlement = async (req, res) => {
   try {
-    const { group, from, to, amount, note = '' } = req.body;
+    const { group, from, to, amount, note = '', type = 'all' } = req.body;
     if (!group || !from || !to || !amount) {
       return res.status(400).json({ success: false, message: 'group, from, to, amount required' });
     }
@@ -56,9 +65,9 @@ exports.createSettlement = async (req, res) => {
 
     const id = newId();
     await db.prepare(`
-      INSERT INTO settlements (id, group_id, from_user, to_user, amount, note, status)
-      VALUES (?, ?, ?, ?, ?, ?, 'pending_confirmation')
-    `).run(id, group, from, to, amount, note);
+      INSERT INTO settlements (id, group_id, from_user, to_user, amount, note, status, settlement_type)
+      VALUES (?, ?, ?, ?, ?, ?, 'pending_confirmation', ?)
+    `).run(id, group, from, to, amount, note, type);
 
     const s = await db.prepare('SELECT * FROM settlements WHERE id = ?').get(id);
     const fromUser = parseUser(await db.prepare('SELECT * FROM users WHERE id = ?').get(from));
@@ -84,7 +93,11 @@ exports.confirmSettlement = async (req, res) => {
       UPDATE settlements SET status = 'completed', completed_at = ? WHERE id = ?
     `).run(new Date().toISOString(), req.params.id);
 
-    const expenses = await db.prepare('SELECT id FROM expenses WHERE group_id = ? AND is_settled = 0').all(settlement.group_id);
+    let expenseQuery = 'SELECT id FROM expenses WHERE group_id = ? AND is_settled = 0';
+    if (settlement.settlement_type === 'regular') expenseQuery += ' AND is_recurring = 0';
+    else if (settlement.settlement_type === 'recurring') expenseQuery += ' AND is_recurring = 1';
+    
+    const expenses = await db.prepare(expenseQuery).all(settlement.group_id);
     const markPaid = await db.prepare('UPDATE splits SET is_paid = 1 WHERE expense_id = ? AND user_id = ?');
     for (const e of expenses) {
       await markPaid.run(e.id, settlement.from_user);
@@ -158,10 +171,11 @@ exports.generatePaymentLink = async (req, res) => {
     const paymentLink = await razorpayClient.paymentLink.create(paymentLinkRequest);
 
     const id = newId();
+    const sType = req.body.type || 'all';
     await db.prepare(`
-      INSERT INTO settlements (id, group_id, from_user, to_user, amount, note, status, razorpay_link_id, razorpay_url)
-      VALUES (?, ?, ?, ?, ?, ?, 'pending_payment', ?, ?)
-    `).run(id, group, from, to, amount, note, paymentLink.id, paymentLink.short_url);
+      INSERT INTO settlements (id, group_id, from_user, to_user, amount, note, status, razorpay_link_id, razorpay_url, settlement_type)
+      VALUES (?, ?, ?, ?, ?, ?, 'pending_payment', ?, ?, ?)
+    `).run(id, group, from, to, amount, note, paymentLink.id, paymentLink.short_url, sType);
 
     res.json({ success: true, url: paymentLink.short_url });
   } catch (error) {
@@ -184,7 +198,11 @@ exports.verifyPaymentLink = async (req, res) => {
         const currentDate = new Date().toISOString();
         await db.prepare(`UPDATE settlements SET status = 'completed', completed_at = ? WHERE id = ?`).run(currentDate, settlement.id);
         
-        const expenses = await db.prepare('SELECT id FROM expenses WHERE group_id = ? AND is_settled = 0').all(settlement.group_id);
+        let expenseQuery = 'SELECT id FROM expenses WHERE group_id = ? AND is_settled = 0';
+        if (settlement.settlement_type === 'regular') expenseQuery += ' AND is_recurring = 0';
+        else if (settlement.settlement_type === 'recurring') expenseQuery += ' AND is_recurring = 1';
+
+        const expenses = await db.prepare(expenseQuery).all(settlement.group_id);
         const markPaid = await db.prepare('UPDATE splits SET is_paid = 1 WHERE expense_id = ? AND user_id = ?');
         for (const e of expenses) {
           await markPaid.run(e.id, settlement.from_user);

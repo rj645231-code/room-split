@@ -158,7 +158,7 @@ export default function DailyItems() {
 
                     <button 
                       className="btn-primary" 
-                      style={{ width: '100%', justifyContent: 'center', height: '36px', background: loggedToday ? 'transparent' : 'var(--bg-accent)', border: loggedToday ? '1px solid #10b981' : 'none', color: loggedToday ? '#10b981' : '#fff' }} 
+                      style={{ width: '100%', justifyContent: 'center', height: '36px', background: loggedToday ? 'transparent' : 'var(--text-primary)', border: loggedToday ? '1px solid #10b981' : 'none', color: loggedToday ? '#10b981' : '#fff' }} 
                       onClick={() => handleSaveDaily(item._id)}
                     >
                       {loggedToday ? "✓ Update Today's Log" : 'Save Today'}

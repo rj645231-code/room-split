@@ -4,13 +4,17 @@ const { minimizeSettlements } = require('../utils/splitAlgorithm');
 /**
  * Compute balances and settlements for a group using SQLite data
  */
-const computeGroupBalances = async (groupId, members) => {
-  const expenses = await db.prepare(`
+const computeGroupBalances = async (groupId, members, filterType = 'all') => {
+  let query = `
     SELECT e.*, u.name as payer_name, u.color as payer_color
     FROM expenses e
     JOIN users u ON u.id = e.paid_by
     WHERE e.group_id = ? AND e.is_settled = 0
-  `).all(groupId);
+  `;
+  if (filterType === 'regular') query += ' AND e.is_recurring = 0';
+  else if (filterType === 'recurring') query += ' AND e.is_recurring = 1';
+  
+  const expenses = await db.prepare(query).all(groupId);
 
   const balanceMap = {};
   members.forEach(m => {
