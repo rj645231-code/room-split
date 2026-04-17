@@ -56,12 +56,12 @@ export default function Auth() {
             <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.25rem', color: '#0f172a' }}>Room Split</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <div style={{ display: window.innerWidth > 768 ? 'flex' : 'none', gap: '1.5rem', fontSize: '0.9rem', color: '#475569', fontWeight: 500 }}>
+            <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
               <a href="#how-it-works" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>How it Works</a>
               <a href="#features" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#0f172a'} onMouseOut={e=>e.target.style.color='inherit'}>Features</a>
             </div>
             <div style={{ display: 'flex', gap: 12 }}>
-              <button className="btn-ghost" onClick={handleTryDemo} style={{ display: window.innerWidth > 600 ? 'block' : 'none', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+              <button className="btn-ghost hidden sm:block" onClick={handleTryDemo} style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
                 Try Demo
               </button>
               <button className="btn-primary" onClick={scrollToAuth} style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
@@ -75,9 +75,9 @@ export default function Auth() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', paddingTop: '7rem' }}>
         
         {/* ── Hero Section ────────────────────────────────────────────────────── */}
-        <section style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4rem', minHeight: '75vh', paddingBottom: '3rem' }}>
+        <section className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 min-h-[75vh] pb-12 pt-4">
           {/* Left Text */}
-          <motion.div style={{ flex: '1 1 500px', zIndex: 10 }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div className="w-full lg:flex-1 z-10" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 99, color: '#818cf8', fontSize: '0.75rem', fontWeight: 700, marginBottom: '1.5rem' }}>
               ✨ Built for Indian Roommates
             </div>
@@ -108,8 +108,8 @@ export default function Auth() {
           </motion.div>
 
           {/* Right Visual Dashboard Mock */}
-          <motion.div style={{ flex: '1 1 450px', position: 'relative', display: 'flex', justifyContent: 'center' }} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
-            <div className="card-glass" style={{ width: '100%', maxWidth: 500, padding: '1.5rem', position: 'relative', background: 'var(--bg-card)', border: '1px solid var(--border-glass)' }}>
+          <motion.div className="w-full lg:flex-1 relative flex justify-center" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
+            <div className="card-glass w-full max-w-[500px]" style={{ padding: '1.5rem', position: 'relative', background: 'var(--bg-card)', border: '1px solid var(--border-glass)' }}>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
                 <div>

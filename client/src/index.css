@@ -467,3 +467,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   }
 }
 
+
+@media (max-width: 768px) {
+  .btn-primary, .btn-ghost { padding: 0.75rem 1.5rem; font-size: 0.95rem; }
+}
