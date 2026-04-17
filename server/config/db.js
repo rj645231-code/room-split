@@ -148,6 +148,18 @@ async function initDB() {
       );
     `);
 
+    await client.execute(`
+      CREATE TABLE IF NOT EXISTS daily_consumptions (
+        id                TEXT PRIMARY KEY,
+        recurring_item_id TEXT NOT NULL,
+        group_id          TEXT NOT NULL,
+        date              TEXT NOT NULL,
+        consumer_ids      TEXT DEFAULT '[]',
+        created_at        TEXT DEFAULT (datetime('now')),
+        UNIQUE(recurring_item_id, date)
+      );
+    `);
+
     // safeAlter equivalents
     const safeAlter = async (sql) => {
       try { await client.execute(sql); } catch (_) {}
@@ -159,6 +171,8 @@ async function initDB() {
     await safeAlter(`ALTER TABLE group_members ADD COLUMN joined_at TEXT DEFAULT (datetime('now'))`);
     await safeAlter(`ALTER TABLE expenses ADD COLUMN created_by TEXT`);
     await safeAlter(`ALTER TABLE expenses ADD COLUMN recurring_item_id TEXT`);
+    await safeAlter(`ALTER TABLE expenses ADD COLUMN is_recurring INTEGER DEFAULT 0`);
+    await safeAlter(`ALTER TABLE expenses ADD COLUMN recurring_month TEXT DEFAULT ''`);
     await safeAlter(`ALTER TABLE settlements ADD COLUMN razorpay_link_id TEXT`);
     await safeAlter(`ALTER TABLE settlements ADD COLUMN razorpay_url TEXT`);
     await safeAlter(`ALTER TABLE users ADD COLUMN budget_start_day INTEGER DEFAULT 1`);

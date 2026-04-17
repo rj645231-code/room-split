@@ -64,6 +64,8 @@ export const getPersonalAnalytics = () => api.get('/analytics/personal');
 export const getRecurringItems    = (groupId) => api.get(`/recurring-items?groupId=${groupId}`);
 export const createRecurringItem  = (data)    => api.post('/recurring-items', data);
 export const deleteRecurringItem  = (id)      => api.delete(`/recurring-items/${id}`);
+export const logConsumption       = (data)    => api.post('/recurring-items/consume', data);
+export const getMonthlySummary    = (groupId, month) => api.get(`/recurring-items/month-summary?groupId=${groupId}&month=${month}`);
 
 // ── Settlements ───────────────────────────────────────────────────────────────
 export const getSettlements        = (groupId, status) =>

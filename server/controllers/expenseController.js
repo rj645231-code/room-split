@@ -78,9 +78,9 @@ exports.getStats = async (req, res) => {
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 };
 
-exports.createExpense = async (req, res) => {
+  exports.createExpense = async (req, res) => {
   try {
-    const { group, paidBy, title, description = '', category = 'grocery', totalAmount, items = [], recurringItemId = null } = req.body;
+    const { group, paidBy, title, description = '', category = 'grocery', totalAmount, items = [], recurringItemId = null, isRecurring = false, recurringMonth = '' } = req.body;
     if (!group || !paidBy || !items.length) {
       return res.status(400).json({ success: false, message: 'group, paidBy and items are required' });
     }
@@ -90,11 +90,11 @@ exports.createExpense = async (req, res) => {
     const createdBy = req.user.id;
 
     await db.prepare(`
-      INSERT INTO expenses (id, group_id, paid_by, created_by, title, description, total_amount, category, date, recurring_item_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO expenses (id, group_id, paid_by, created_by, title, description, total_amount, category, date, recurring_item_id, is_recurring, recurring_month)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(expId, group, paidBy, createdBy, title || items[0]?.name || 'Expense',
         description, computedTotal, category,
-        new Date().toISOString(), recurringItemId);
+        new Date().toISOString(), recurringItemId, isRecurring ? 1 : 0, recurringMonth);
 
     for (const item of items) {
       const itemId = newId();

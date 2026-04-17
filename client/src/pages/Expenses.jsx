@@ -29,6 +29,7 @@ export default function Expenses() {
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('all');
   const [expanded, setExpanded] = useState(null);
+  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'recurring'
 
   const fetchExpenses = async () => {
     setLoading(true);
@@ -94,7 +95,8 @@ export default function Expenses() {
     const matchSearch = e.title?.toLowerCase().includes(search.toLowerCase()) ||
       e.items?.some(i => i.name?.toLowerCase().includes(search.toLowerCase()));
     const matchCat = filterCat === 'all' || e.category === filterCat;
-    return matchSearch && matchCat;
+    const matchTab = activeTab === 'all' ? !e.isRecurring : e.isRecurring;
+    return matchSearch && matchCat && matchTab;
   });
 
   const handleDelete = async (id) => {
@@ -142,53 +144,22 @@ export default function Expenses() {
         </div>
       </div>
 
-      {dueRecurringItems.length > 0 && !loading && search === '' && filterCat === 'all' && (
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Today's Recurring Items
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {dueRecurringItems.map(item => {
-              const meta = CATEGORY_META[item.category] || CATEGORY_META.other;
-              const selectedConsumers = recurringSaves[item._id] || [];
-              return (
-                <div key={item._id} style={{ background: 'var(--bg-glass)', border: '1px solid var(--border-glass)', borderRadius: 16, padding: '1rem', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: meta.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
-                    {meta.icon}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 150 }}>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.title}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>₹{item.amount.toFixed(2)}</div>
-                  </div>
-                  
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', flex: 2, minWidth: 200, alignItems: 'center' }}>
-                    {activeGroup?.members?.map(m => {
-                      const isSelected = selectedConsumers.includes(m._id);
-                      return (
-                        <div key={m._id} onClick={() => {
-                          setRecurringSaves(prev => {
-                            const arr = prev[item._id] || [];
-                            return { ...prev, [item._id]: isSelected ? arr.filter(id => id !== m._id) : [...arr, m._id] };
-                          });
-                        }} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: '4px 10px', borderRadius: 99, border: `1px solid ${isSelected ? m.color : 'var(--border-glass)'}`, background: isSelected ? m.color + '22' : 'transparent', opacity: isSelected ? 1 : 0.6 }}>
-                          <div style={{ width: 14, height: 14, borderRadius: 4, border: `1px solid ${isSelected ? m.color : 'var(--text-muted)'}`, background: isSelected ? m.color : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            {isSelected && <svg viewBox="0 0 14 14" fill="none" style={{ width: 10, height: 10 }}><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="var(--bg-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                          </div>
-                          <span style={{ fontSize: '0.75rem', color: isSelected ? m.color : 'var(--text-muted)', fontWeight: isSelected ? 600 : 400 }}>{m.name}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <button className="btn-primary" style={{ padding: '8px 16px', fontSize: '0.8rem', borderRadius: 10 }} onClick={() => handleSaveRecurring(item)}>
-                    Save
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.5rem' }}>
+        <button 
+          className={`chip ${activeTab === 'all' ? 'selected' : ''}`} 
+          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'all' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'all' ? 'var(--bg-default)' : 'var(--text-secondary)' }}
+          onClick={() => setActiveTab('all')}
+        >
+          Regular Expenses
+        </button>
+        <button 
+          className={`chip ${activeTab === 'recurring' ? 'selected' : ''}`} 
+          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'recurring' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'recurring' ? 'var(--bg-default)' : 'var(--text-secondary)' }}
+          onClick={() => setActiveTab('recurring')}
+        >
+          Recurring / Monthly Bills
+        </button>
+      </div>
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

@@ -76,3 +76,52 @@ exports.deleteRecurringItem = async (req, res) => {
     res.status(500).json({ success: false, message: e.message });
   }
 };
+
+exports.logConsumption = async (req, res) => {
+  try {
+    const { recurringItemId, groupId, date, consumerIds = [] } = req.body;
+    if (!recurringItemId || !groupId || !date) {
+      return res.status(400).json({ success: false, message: 'Missing fields' });
+    }
+
+    const existing = await db.prepare('SELECT id FROM daily_consumptions WHERE recurring_item_id = ? AND date = ?').get(recurringItemId, date);
+    if (existing) {
+      await db.prepare('UPDATE daily_consumptions SET consumer_ids = ? WHERE id = ?').run(JSON.stringify(consumerIds), existing.id);
+    } else {
+      await db.prepare(`
+        INSERT INTO daily_consumptions (id, recurring_item_id, group_id, date, consumer_ids)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(newId(), recurringItemId, groupId, date, JSON.stringify(consumerIds));
+    }
+    
+    res.json({ success: true, message: 'Consumption logged' });
+  } catch (e) {
+    res.status(500).json({ success: false, message: e.message });
+  }
+};
+
+exports.getMonthlySummary = async (req, res) => {
+  try {
+    const { groupId, month } = req.query;
+    if (!groupId || !month) return res.status(400).json({ success: false, message: 'groupId and month required' });
+
+    const rows = await db.prepare(`SELECT * FROM daily_consumptions WHERE group_id = ? AND date LIKE ?`).all(groupId, `${month}-%`);
+    const templates = await db.prepare(`SELECT * FROM recurring_items WHERE group_id = ?`).all(groupId);
+    
+    const consumptions = rows.map(r => ({
+      ...r,
+      _id: r.id,
+      consumerIds: JSON.parse(r.consumer_ids || '[]')
+    }));
+
+    const parsedTemplates = templates.map(t => ({
+      ...t,
+      _id: t.id,
+      defaultConsumers: JSON.parse(t.default_consumers || '[]')
+    }));
+
+    res.json({ success: true, data: { consumptions, templates: parsedTemplates } });
+  } catch (e) {
+    res.status(500).json({ success: false, message: e.message });
+  }
+};

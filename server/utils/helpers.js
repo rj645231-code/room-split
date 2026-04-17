@@ -47,6 +47,8 @@ const parseExpense = (e, items = [], splits = []) => {
     createdBy: e.created_by,
     totalAmount: e.total_amount,
     isSettled: !!e.is_settled,
+    isRecurring: !!e.is_recurring,
+    recurringMonth: e.recurring_month,
     items,
     splits,
     createdAt: e.created_at,

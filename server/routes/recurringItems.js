@@ -9,4 +9,8 @@ router.get('/',       ctrl.getRecurringItems);
 router.post('/',      ctrl.createRecurringItem);
 router.delete('/:id', ctrl.deleteRecurringItem);
 
+// Daily Consumables
+router.post('/consume',      ctrl.logConsumption);
+router.get('/month-summary', ctrl.getMonthlySummary);
+
 module.exports = router;
