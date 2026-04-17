@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 const ctrl = require('../controllers/personalExpenseController');
 
-router.use(auth);
+router.use(protect);
 
 router.get('/summary', ctrl.getSummary);   // must be before /:id
 router.get('/',        ctrl.getAll);
