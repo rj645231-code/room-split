@@ -159,14 +159,15 @@ export default function Analytics() {
         title="My Budget"
         subtitle={`${fmtDate(data.cycleStart)} — ${fmtDate(data.cycleEnd)}`}
         actions={
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <select className="input-glass" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} style={{ padding: '0.4rem 2rem 0.4rem 1rem', fontSize: '0.8rem', minHeight: '34px', width: 'auto' }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            <select className="input-glass" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}
+              style={{ padding: '0.45rem 2rem 0.45rem 0.75rem', fontSize: '0.8rem', minHeight: 36, width: 'auto' }}>
               <option value="all">All Expenses</option>
               <option value="group">Group Only</option>
               <option value="personal">Personal Only</option>
             </select>
-            <button className="btn-ghost" onClick={() => fetchData(typeFilter)} style={{ padding: '0.4rem 0.75rem' }}><RefreshCw size={14} /> <span className="hidden sm:inline">Refresh</span></button>
-            <button className="btn-ghost" onClick={exportPDF} style={{ padding: '0.4rem 0.75rem' }}><Download size={14} /> <span className="hidden sm:inline">PDF</span></button>
+            <button className="btn-ghost" onClick={() => fetchData(typeFilter)} style={{ padding: '0.45rem 0.75rem', minHeight: 36 }} title="Refresh"><RefreshCw size={14} /></button>
+            <button className="btn-ghost" onClick={exportPDF} style={{ padding: '0.45rem 0.75rem', minHeight: 36 }} title="Export PDF"><Download size={14} /></button>
           </div>
         }
       />
