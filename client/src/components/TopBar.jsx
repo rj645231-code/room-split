@@ -63,7 +63,8 @@ export default function TopBar({ title, subtitle, actions }) {
         <div style={{ minWidth: 0 }}>
           <h1 style={{
             fontFamily: 'Poppins', fontWeight: 800,
-            fontSize: '1.5rem', color: 'var(--text-primary)',
+            fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
+            color: 'var(--text-primary)',
             letterSpacing: '-0.5px', lineHeight: 1.1,
             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           }}>
@@ -90,9 +91,9 @@ export default function TopBar({ title, subtitle, actions }) {
           </div>
         )}
 
-        {/* User avatar dropdown — available on all screen sizes */}
+        {/* User avatar dropdown — mobile-only via CSS (#topbar-user-menu hidden on desktop) */}
         {currentUser && (
-          <div ref={menuRef} style={{ position: 'relative' }}>
+          <div id="topbar-user-menu" ref={menuRef} style={{ position: 'relative', flexShrink: 0 }}>
             <button
               onClick={() => setMenuOpen(o => !o)}
               style={{

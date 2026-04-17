@@ -462,6 +462,12 @@ body {
   }
 }
 
+/* ── TopBar user dropdown: mobile-only, hidden on desktop (sidebar handles it) ── */
+#topbar-user-menu { display: none; }
+@media (max-width: 768px) {
+  #topbar-user-menu { display: block; }
+}
+
 /* ── Select ── */
 select.input-glass {
   -webkit-appearance: none;
