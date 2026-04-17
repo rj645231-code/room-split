@@ -8,6 +8,8 @@ import TopBar from '../components/TopBar';
 import AddExpenseModal from '../components/AddExpenseModal';
 import AddRecurringItemModal from '../components/AddRecurringItemModal';
 import toast from 'react-hot-toast';
+import ExpenseTabs from '../components/ExpenseTabs';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CATEGORY_META = {
   grocery:       { icon: '🛒', color: '#10b981', label: 'Grocery'   },
@@ -20,6 +22,12 @@ const CATEGORY_META = {
 
 export default function Expenses() {
   const { activeGroup, currentUser, isAdmin, isOfflineMode } = useApp();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const initialTab = searchParams.get('tab') === 'recurring' ? 'recurring' : 'all';
+  
+  const [activeTab, setActiveTab] = useState(initialTab); // 'all' | 'recurring'
   const [expenses, setExpenses] = useState([]);
   const [recurringItems, setRecurringItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +62,25 @@ export default function Expenses() {
       }
     } catch { setExpenses(MOCK_DATA.expenses); }
     finally { setLoading(false); }
+  };
+
+  // Sync state if URL changes directly
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const tabParam = searchParams.get('tab') === 'recurring' ? 'recurring' : 'all';
+    if (tabParam !== activeTab) {
+      setActiveTab(tabParam);
+    }
+  }, [location.search]);
+
+  // Handle tab change from ExpenseTabs
+  const handleTabChange = (newTab) => {
+    setActiveTab(newTab);
+    if (newTab === 'recurring') {
+      navigate('/expenses?tab=recurring', { replace: true });
+    } else {
+      navigate('/expenses', { replace: true });
+    }
   };
 
   useEffect(() => { fetchExpenses(); }, [activeGroup?._id, isOfflineMode]);
@@ -144,22 +171,7 @@ export default function Expenses() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.5rem' }}>
-        <button 
-          className={`chip ${activeTab === 'all' ? 'selected' : ''}`} 
-          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'all' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'all' ? '#ffffff' : 'var(--text-secondary)' }}
-          onClick={() => setActiveTab('all')}
-        >
-          Regular Expenses
-        </button>
-        <button 
-          className={`chip ${activeTab === 'recurring' ? 'selected' : ''}`} 
-          style={{ borderRadius: 8, padding: '8px 16px', background: activeTab === 'recurring' ? 'var(--text-primary)' : 'transparent', color: activeTab === 'recurring' ? '#ffffff' : 'var(--text-secondary)' }}
-          onClick={() => setActiveTab('recurring')}
-        >
-          Recurring / Monthly Bills
-        </button>
-      </div>
+      <ExpenseTabs active={activeTab} onTabChange={handleTabChange} />
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

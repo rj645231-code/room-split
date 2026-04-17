@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext';
 import { getExpenses } from '../services/api';
 import { MOCK_DATA } from '../services/mockData';
 import TopBar from '../components/TopBar';
+import ExpenseTabs from '../components/ExpenseTabs';
 
 const CATEGORY_META = {
   grocery:       { icon: '🛒', color: '#10b981' },
@@ -61,6 +62,8 @@ export default function Transactions() {
         title="Transaction History"
         subtitle={`${expenses.length} transactions · ₹${totalAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })} total`}
       />
+
+      <ExpenseTabs active="history" />
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

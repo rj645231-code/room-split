@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext';
 import { getMonthlySummary, logConsumption, createExpense, deleteRecurringItem } from '../services/api';
 import AddRecurringItemModal from '../components/AddRecurringItemModal';
 import TopBar from '../components/TopBar';
+import ExpenseTabs from '../components/ExpenseTabs';
 import { Plus, CheckCircle, Save, ChevronRight, X, Calendar, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -92,6 +93,8 @@ export default function DailyItems() {
         subtitle="Track daily consumptions like Tiffin, Milk"
         actions={<button className="btn-primary" onClick={() => setAddModalOpen(true)}><Plus size={15} /> Add Item</button>}
       />
+
+      <ExpenseTabs active="daily" />
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
