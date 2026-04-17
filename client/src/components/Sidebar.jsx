@@ -1,5 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
 import { Calendar, LayoutDashboard, Receipt, CreditCard, Users, Zap, Sun, Moon, BarChart2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import Logo from './Logo';
@@ -20,6 +21,23 @@ export default function Sidebar() {
     currentUser, logout
   } = useApp();
 
+  const location = useLocation();
+
+  // Auto-close sidebar on route change (mobile)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [sidebarOpen]);
+
   return (
     <>
       {/* Mobile backdrop */}
@@ -36,11 +54,8 @@ export default function Sidebar() {
         )}
       </AnimatePresence>
 
-      {/* Sidebar panel */}
-      <motion.div
-        className={`sidebar${sidebarOpen ? ' open' : ''}`}
-        style={sidebarOpen ? { transform: 'translateX(0)' } : {}}
-      >
+      {/* Sidebar panel — remove conflicting inline style, use className only */}
+      <div className={`sidebar${sidebarOpen ? ' open' : ''}`}>
         {/* Logo + brand */}
         <div style={{ padding: '1.25rem 1.25rem 1rem', borderBottom: '1px solid var(--border-glass)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.75rem' }}>
@@ -178,7 +193,7 @@ export default function Sidebar() {
             Logout
           </button>
         </div>
-      </motion.div>
+      </div>
     </>
   );
 }
