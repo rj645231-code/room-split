@@ -37,7 +37,6 @@ export default function Expenses() {
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('all');
   const [expanded, setExpanded] = useState(null);
-  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'recurring'
 
   const fetchExpenses = async () => {
     setLoading(true);
